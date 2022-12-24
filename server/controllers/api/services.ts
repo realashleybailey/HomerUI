@@ -6,12 +6,13 @@ import axios from 'axios';
 import { getDatabase, getAllDatabase, writeDatabase } from '../../helpers/database.js'
 
 
-const getServices = async (req, res) => {
+const getServices = async (req: any, res: any) => {
 
     // Get the user id from the request user
     const userId = req.user ? req.user.id : 1;
 
     // Get all the groups from the database where the user id is the user id
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err1, row: groups } = await getAllDatabase(db, 'SELECT * FROM groups WHERE user_id = ' + userId);
 
     // If there is an error, return an error or if the services do not exist, return an empty null
@@ -19,6 +20,7 @@ const getServices = async (req, res) => {
 
 
     // Get all the services from the database where the user id is the user id
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err2, row: services } = await getAllDatabase(db, 'SELECT * FROM services WHERE user_id = ' + userId);
 
     // If there is an error, return an error or if the services do not exist, return an empty null
@@ -26,28 +28,30 @@ const getServices = async (req, res) => {
 
 
     // Place the services in the groups in a array named items based on the group id
-    groups.forEach(group => {
-        group.items = services.filter(service => service.group_id === group.id);
+    groups.forEach((group: any) => {
+        group.items = services.filter((service: any) => service.group_id === group.id);
     });
 
     // Return the services
     res.json(groups);
 };
 
-const getStats = async (req, res) => {
+const getStats = async (req: any, res: any) => {
 
     // Get the appid for the service from the database where the query id is the service id
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err1, row: service } = await getDatabase(db, 'SELECT * FROM services WHERE id = ' + req.params.id);
 
     // If there is an error, return an error or if the service does not exist, return an empty null
     if (err1 || !service) return res.status(500).json({ message: 'Something went wrong' });
 
+    // @ts-expect-error TS(1343): The 'import.meta' meta-property is only allowed wh... Remove this comment to see the full error message
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
 
     // Convert the above function to a promise
-    const readFile = (file) => {
+    const readFile = (file: any) => {
         return new Promise((resolve) => {
             fs.readFile(file, { encoding: 'utf8' }, (err, data) => {
                 resolve({ err, data });
@@ -56,18 +60,19 @@ const getStats = async (req, res) => {
     };
 
     // Get the local file with name of the appid
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err, data: apiData } = await readFile(`${__dirname}/../../supportedapps/${service.appid}.json`);
 
     // If there is an error, return an error or if the service does not exist, return an empty null
     if (err) return res.status(500).json({ message: 'Something went wrong' });
 
     // Default return data
-    let defaultReturn = [];
+    let defaultReturn: any = [];
 
     // Parse the data
     const apiMeta = JSON.parse(apiData);
 
-    apiMeta.stats.forEach(async function (stat, index) {
+    apiMeta.stats.forEach(async function (stat: any, index: any) {
 
         // If apiMeta.stats[index].type is basic_auth, then use the basic auth
         if (apiMeta.type === 'basic_auth') {

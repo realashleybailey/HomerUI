@@ -1,4 +1,6 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'bcry... Remove this comment to see the full error message
 import bcrypt from 'bcrypt';
 import config from '../../config.js';
 import db from '../../db/connect.js'
@@ -6,7 +8,7 @@ import db from '../../db/connect.js'
 // Create a function that will verify the user's credentials and return a JWT token
 // that will be used to authenticate the user on subsequent requests.
 
-function login(req, res) {
+function login(req: any, res: any) {
     // Get credentials from request body
     const { username, password } = req.body;
 
@@ -20,7 +22,7 @@ function login(req, res) {
         if (!row) return res.status(401).json({ message: 'Username or password is incorrect' });
 
         // Check if the password is correct
-        if (!await bcrypt.compare(password, row.password)) return res.status(401).json({ message: 'Username or password is incorrect' });
+        if (!(await bcrypt.compare(password, row.password))) return res.status(401).json({ message: 'Username or password is incorrect' });
 
         // Strip the password from the user
         delete row.password;

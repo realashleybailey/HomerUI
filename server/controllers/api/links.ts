@@ -1,7 +1,7 @@
 import db from '../../db/connect.js'
 
 // Create a function that will add a new link to the database using the current users settings id
-function addLink(req, res) {
+function addLink(req: any, res: any) {
 
     // Get the settings id from the request user
     const settingsId = req.user.settings_id;
@@ -31,7 +31,7 @@ function addLink(req, res) {
 }
 
 // Create a function that will delete a link from the database using the id for the link
-function deleteLink(req, res) {
+function deleteLink(req: any, res: any) {
 
     // Get the id from the request parameters
     const id = req.body.id;

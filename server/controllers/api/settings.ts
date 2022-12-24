@@ -2,7 +2,7 @@ import db from '../../db/connect.js'
 import { getDatabase, getAllDatabase, writeDatabase } from '../../helpers/database.js'
 
 // Create a function that will update the setting based on the id and post data
-async function setSetting(req, res) {
+async function setSetting(req: any, res: any) {
 
     // Get the settings id from the request user
     const settingsId = req.user.settings_id;
@@ -14,6 +14,7 @@ async function setSetting(req, res) {
     const value = req.body.data || null;
 
     // Write the setting to the database
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err, this: that } = await writeDatabase(db, 'UPDATE settings SET ' + setting + ' = ? WHERE id = ?', [value, settingsId]);
 
     // If there is an error, return an error
@@ -24,7 +25,7 @@ async function setSetting(req, res) {
 };
 
 // Create a function that will update all the settings based on the post data
-async function setSettings(req, res) {
+async function setSettings(req: any, res: any) {
 
     // Get the settings id from the request user
     const settingsId = req.user.settings_id;
@@ -39,6 +40,7 @@ async function setSettings(req, res) {
     for (const [key, value] of Object.entries(data)) {
 
         // Update the setting in the database
+        // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
         const { err } = await writeDatabase(db, 'UPDATE settings SET ' + key + ' = ? WHERE id = ?', [value, settingsId]);
 
         // If there is an error, set the error to err and break the loop
@@ -56,13 +58,14 @@ async function setSettings(req, res) {
 
 
 // Create a function that will get the settings from the database where the row id is 1
-async function getSettings(req, res) {
+async function getSettings(req: any, res: any) {
 
     // Get the settings id from the request user
     const settingsId = req.user ? req.user.settings_id : 1;
 
     // BASE SETTINGS
     // Get the settings from the database where the row id is settings id
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err, row: settings } = await getDatabase(db, 'SELECT * FROM settings WHERE id = ' + settingsId);
 
     // If there is an error, return an error or if the settings do not exist, return an error
@@ -71,6 +74,7 @@ async function getSettings(req, res) {
 
     // BASE LINKS
     // Get the links from the database where the settings id is the settings id
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err2, row: links } = await getAllDatabase(db, 'SELECT * FROM links WHERE settings_id = ' + settingsId);
 
     // If there is an error, dont add the links to the links array
@@ -79,6 +83,7 @@ async function getSettings(req, res) {
 
     // BASE MESSAGE
     // Get the message from the database where the settings id is the settings id
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err3, row: message } = await getDatabase(db, 'SELECT * FROM messages WHERE settings_id = ' + settingsId);
 
     // If there is an error, dont add the message to the message array
@@ -90,13 +95,14 @@ async function getSettings(req, res) {
 };
 
 // Create a function that will get the setting from the database where the row id is 1
-async function getSetting(req, res) {
+async function getSetting(req: any, res: any) {
 
     // Get the settings id from the request user and the setting from the request parameters
     const settingsId = req.user ? req.user.settings_id : 1;
     const setting = req.params.id;
 
     // Get the setting from the database where the row id is settings id and the column name is the setting
+    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err, row } = await getDatabase(db, 'SELECT ' + setting + ' FROM settings WHERE id = ' + settingsId);
 
     // If there is an error, return an error or if the setting does not exist, return an error

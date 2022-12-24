@@ -1,6 +1,6 @@
 import db from '../../db/connect.js'
 
-function users(req, res) {
+function users(req: any, res: any) {
     // Get current user from the database using the user.id from the JWT token
     db.get('SELECT * FROM users WHERE id = ?', [req.user.id], (err, row) => {
 

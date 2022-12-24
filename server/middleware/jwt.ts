@@ -1,7 +1,8 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
 
-function jwtVerify(req, res, next) {
+function jwtVerify(req: any, res: any, next: any) {
 
     // Get the token from the request header
     const token = req.headers.authorization;
@@ -10,7 +11,7 @@ function jwtVerify(req, res, next) {
     if (!token) return res.status(401).json({ message: 'Access denied' });
 
     // If the token is present, verify it
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, config.secret, (err: any, decoded: any) => {
 
         // If the token is invalid, return an error
         if (err) return res.status(401).json({ message: 'Access denied' });

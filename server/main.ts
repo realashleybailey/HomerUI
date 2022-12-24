@@ -1,5 +1,8 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'expr... Remove this comment to see the full error message
 import express from 'express';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'body... Remove this comment to see the full error message
 import bodyParser from 'body-parser';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'morg... Remove this comment to see the full error message
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -24,7 +27,7 @@ APP.use(morgan('tiny'));
 APP.use('/api', apiRouter);
 
 APP.use('/', express.static('../dist'));
-APP.use('/', (req, res) => {
+APP.use('/', (req: any, res: any) => {
     res.sendFile('index.html', { root: '../dist' });
 });
 

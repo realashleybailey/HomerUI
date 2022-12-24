@@ -1,3 +1,3 @@
 export default {
-    secret: 'secret',
-}
+  secret: "secret",
+};

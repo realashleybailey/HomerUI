@@ -1,7 +1,7 @@
 import db from "../../db/connect.js";
 import { getDatabase } from "../../helpers/database.js";
 
-const service = async (data) => {
+const service = async (data: any) => {
 
     // Get the id from the data
     const { id } = data;
@@ -13,6 +13,7 @@ const service = async (data) => {
     // if (err1) return;
 
     // Create a room for the service
+    // @ts-expect-error TS(2304): Cannot find name 'socket'.
     socket.join(service.id);
 };
 

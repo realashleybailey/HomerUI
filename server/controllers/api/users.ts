@@ -1,6 +1,6 @@
 import db from '../../db/connect.js'
 
-function users(req, res) {
+function users(req: any, res: any) {
     // Get all users from the database
     db.all('SELECT * FROM users', (err, rows) => {
 
