@@ -1,23 +1,18 @@
 <h1 align="center">
- <img
-  width="180"
-  alt="Homer's donut"
-  src="https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png">
+ <img width="180" alt="Homer's donut" src="https://raw.githubusercontent.com/bastienwirtz/homer/main/public/logo.png">
     <br/>
-    Homer
+    Homer V2
 </h1>
 
 <h4 align="center">
- A dead simple static <strong>HOM</strong>epage for your serv<strong>ER</strong> to keep your services on hand, from a simple <code>yaml</code> configuration file.
+ A not so dead simple take on <a href="https://github.com/bastienwirtz/homer">Homer</a> by <a href="https://github.com/bastienwirtz">bastienwirtz</a>.
 </h4>
 <p align="center"> 
-  <a href="https://www.buymeacoffee.com/bastien" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+  <a href="https://www.buymeacoffee.com/ashleybailey" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 <p>
 <p align="center">
  <strong>
    <a href="https://homer-demo.netlify.app">Demo</a>
-  •
-  <a href="https://gitter.im/homer-dashboard/community">Chat</a>
   •
   <a href="#getting-started">Getting started</a>
  </strong>
@@ -26,15 +21,9 @@
  <a href="https://opensource.org/licenses/Apache-2.0"><img
   alt="License: Apache 2"
   src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
-  <a href="https://gitter.im/homer-dashboard/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"><img
-  alt="Gitter chat"
-  src="https://badges.gitter.im/homer-dashboard/community.svg"></a>
-  <a href="https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip"><img
+  <a href="https://github.com/realashlbailey/homerV2/releases/latest/download/homer.zip"><img
   alt="Download homer static build"
   src="https://img.shields.io/badge/Download-homer.zip-orange"></a>
- <a href="https://twitter.com/acdlite/status/974390255393505280"><img
-  alt="speed-blazing"
-  src="https://img.shields.io/badge/speed-blazing%20%F0%9F%94%A5-red"></a>
  <a href="https://github.com/awesome-selfhosted/awesome-selfhosted"><img
   alt="Awesome"
   src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg"></a>
