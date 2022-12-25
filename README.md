@@ -12,7 +12,7 @@
 <p>
 <p align="center">
  <strong>
-   <a href="https://homer-demo.netlify.app">Demo</a>
+   <a href="https://homer-demo.netlify.app">Demod</a>
   •
   <a href="#getting-started">Getting started</a>
  </strong>
