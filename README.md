@@ -50,23 +50,17 @@
 
 ## Features
 
-- [yaml](http://yaml.org/) file configuration
+- Full GUI for configuration
 - Installable (pwa)
-- Search
 - Grouping
 - Theme customization
 - Offline health check
-- keyboard shortcuts:
-  - `/` Start searching.
-  - `Escape` Stop searching.
-  - `Enter` Open the first matching result (respects the bookmark's `_target` property).
-  - `Alt`/`Option` + `Enter` Open the first matching result in a new tab.
 
 ## Getting started
 
-Homer is a full static html/js dashboard, based on a simple yaml configuration file. See [documentation](docs/configuration.md) for information about the configuration (`assets/config.yml`) options.
+HomerV2 is a dashboard, based on the original Homer. See [documentation](docs/configuration.md) for information about the configuration options.
 
-It's meant to be served by an HTTP server, **it will not work if you open the index.html directly over file:// protocol**.
+Unlike the original Homer, HomerV2 must be served by the included Express server, **it will not work if you simply host the dist**.
 
 ### Using docker
 
@@ -75,7 +69,7 @@ docker run -d \
   -p 8080:8080 \
   -v </your/local/assets/>:/www/assets \
   --restart=always \
-  b4bz/homer:latest
+  realashleybailey/homerv2:latest
 ```
 
 The container will run using a user uid and gid 1000. Add `--user <your-UID>:<your-GID>` to the docker command to adjust it. Make sure this match the ownership of your assets directory.
