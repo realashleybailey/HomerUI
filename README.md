@@ -12,7 +12,7 @@
 <p>
 <p align="center">
  <strong>
-   <a href="https://homer-demo.netlify.app">Demod</a>
+   <a href="https://homer-demo.netlify.app">Demo</a>
   •
   <a href="#getting-started">Getting started</a>
  </strong>
@@ -30,7 +30,11 @@
 </p>
 
 <p align="center">
- <img src="https://raw.github.com/bastienwirtz/homer/main/docs/screenshot.png" width="100%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/Dashboard.png?token=GHSAT0AAAAAABW45DINWCRB4S3N4D5QGUQMY5I2VGQ" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/AddService-Step1.png?token=GHSAT0AAAAAABW45DINYRL674GCAAVAWPAGY5I2WLA" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/AddService-Step2.png?token=GHSAT0AAAAAABW45DIMZ7KFEPRVUB4AYCESY5I2W4A" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/AddService-Step3.png?token=GHSAT0AAAAAABW45DIN7XMHB5S5G6E67JXMY5I2XEA" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/Dashboard.png?token=GHSAT0AAAAAABW45DINWCRB4S3N4D5QGUQMY5I2VGQ" width="15%">
 </p>
 
 ## Table of Contents
@@ -75,17 +79,14 @@ docker run -d \
 
 The container will run using a user uid and gid 1000. Add `--user <your-UID>:<your-GID>` to the docker command to adjust it. Make sure this match the ownership of your assets directory.
 
-**Environment variables:** 
+**Environment variables:**
 
 * **`INIT_ASSETS`** (default: `1`)
-Install example configuration file & assets (favicons, ...) to help you get started.
-
+  Install example configuration file & assets (favicons, ...) to help you get started.
 * **`SUBFOLDER`** (default: `null`)
-If you would like to host Homer in a subfolder, (ex: *http://my-domain/**homer***), set this to the subfolder path (ex `/homer`).
-
+  If you would like to host Homer in a subfolder, (ex: *http://my-domain/**homer***), set this to the subfolder path (ex `/homer`).
 * **`PORT`** (default: `8080`)
-If you would like to change internal port of Homer from default `8080` to your port choice.
-
+  If you would like to change internal port of Homer from default `8080` to your port choice.
 
 #### With docker-compose
 
