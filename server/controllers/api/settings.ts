@@ -1,5 +1,5 @@
-import db from '../../db/connect.js'
-import { getDatabase, getAllDatabase, writeDatabase } from '../../helpers/database.js'
+import db from '../../db/connect'
+import { getDatabase, getAllDatabase, writeDatabase } from '../../helpers/database'
 
 // Create a function that will update the setting based on the id and post data
 async function setSetting(req: any, res: any) {
@@ -65,7 +65,6 @@ async function getSettings(req: any, res: any) {
 
     // BASE SETTINGS
     // Get the settings from the database where the row id is settings id
-    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err, row: settings } = await getDatabase(db, 'SELECT * FROM settings WHERE id = ' + settingsId);
 
     // If there is an error, return an error or if the settings do not exist, return an error
@@ -74,7 +73,6 @@ async function getSettings(req: any, res: any) {
 
     // BASE LINKS
     // Get the links from the database where the settings id is the settings id
-    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err2, row: links } = await getAllDatabase(db, 'SELECT * FROM links WHERE settings_id = ' + settingsId);
 
     // If there is an error, dont add the links to the links array
@@ -83,7 +81,6 @@ async function getSettings(req: any, res: any) {
 
     // BASE MESSAGE
     // Get the message from the database where the settings id is the settings id
-    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err: err3, row: message } = await getDatabase(db, 'SELECT * FROM messages WHERE settings_id = ' + settingsId);
 
     // If there is an error, dont add the message to the message array
@@ -102,7 +99,6 @@ async function getSetting(req: any, res: any) {
     const setting = req.params.id;
 
     // Get the setting from the database where the row id is settings id and the column name is the setting
-    // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
     const { err, row } = await getDatabase(db, 'SELECT ' + setting + ' FROM settings WHERE id = ' + settingsId);
 
     // If there is an error, return an error or if the setting does not exist, return an error

@@ -1,4 +1,4 @@
-import db from '../../db/connect.js'
+import db from '../../db/connect'
 
 function users(req: any, res: any) {
     // Get all users from the database

@@ -1,15 +1,22 @@
-import service from '../controllers/websocket/service.js';
+import { Server } from "socket.io";
+import service from "../controllers/websocket/service";
 
-const WEBSOCKET = (io: any) => {
+const WEBSOCKET = (io: Server) => {
 
-    io.on('connection', (socket: any) => {
-        socket.emit('CONNECT', socket.id);
+  io.on("connection", (socket) => {
 
-        socket.on('service', (data: any) => {
-            socket.join(`service-${data.id}`);
-        });
+    socket.emit("CONNECT", socket.id);
+
+    // Listen for everyting
+    socket.onAny((event, ...args) => {
+       
+        // If the event is service, run the service function
+
+        service(socket, args[0]);
+
     });
 
-}
+  });
+};
 
 export default WEBSOCKET;

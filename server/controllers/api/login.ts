@@ -2,8 +2,8 @@
 import jwt from 'jsonwebtoken';
 // @ts-expect-error TS(7016): Could not find a declaration file for module 'bcry... Remove this comment to see the full error message
 import bcrypt from 'bcrypt';
-import config from '../../config.js';
-import db from '../../db/connect.js'
+import config from '../../config';
+import db from '../../db/connect'
 
 // Create a function that will verify the user's credentials and return a JWT token
 // that will be used to authenticate the user on subsequent requests.

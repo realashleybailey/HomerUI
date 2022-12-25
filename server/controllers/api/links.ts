@@ -1,4 +1,4 @@
-import db from '../../db/connect.js'
+import db from '../../db/connect'
 
 // Create a function that will add a new link to the database using the current users settings id
 function addLink(req: any, res: any) {

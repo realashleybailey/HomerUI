@@ -1,17 +1,19 @@
 // Import modules
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'expr... Remove this comment to see the full error message
 import express from "express";
 
 // Import middleware
-import jwtVerify from "../middleware/jwt.js";
+import jwtVerify from "../middleware/jwt";
+
+import { join } from "path";
 
 // Import controllers
-import login from "../controllers/api/login.js";
-import users from "../controllers/api/users.js";
-import autologin from "../controllers/api/autologin.js";
-import settings from "../controllers/api/settings.js";
-import links from "../controllers/api/links.js";
-import services from "../controllers/api/services.js";
+import login from "../controllers/api/login";
+import users from "../controllers/api/users";
+import autologin from "../controllers/api/autologin";
+import settings from "../controllers/api/settings";
+import links from "../controllers/api/links";
+import services from "../controllers/api/services";
+import { existsSync } from "fs";
 
 const router = express.Router();
 
@@ -36,7 +38,25 @@ router.post("/deletelink", jwtVerify, links.deleteLink);
 // Create api route for loading services
 router.get("/services", services.getServices);
 
+// Serve json file for services
+router.get("/supportedapps", (req, res) => {
+    res.sendFile("SupportedAppsList.json", { root: join(__dirname, "../supportedapps/") });
+});
+
+router.get("/supportedapps/config/:appname", (req, res) => {
+
+    // Clean id to prevent path traversal
+    const id = req.params.appname.replace(/[^a-zA-Z0-9]/g, "");
+    const path = join(__dirname, "../supportedapps/", id);
+
+    // Check if folder exists
+    if (!existsSync(path)) return res.status(404).send("Not found");
+
+    // Send file
+    res.sendFile('config.json', { root: path });
+});
+
 // Create api route for getting stats
-router.get("/apps/:id/stats", services.getStats);
+// router.get("/apps/:id/stats", services.getStats);
 
 export default router;

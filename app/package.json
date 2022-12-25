@@ -1,0 +1,46 @@
+{
+  "name": "homer",
+  "version": "22.07.2",
+  "scripts": {
+    "dev": "vite",
+    "mock": "http-server dummy-data/ --cors",
+    "build": "vite build --watch",
+    "preview": "vite preview --port 5050",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@creativebulma/bulma-divider": "^1.1.0",
+    "@fortawesome/fontawesome-free": "^6.2.0",
+    "@vueform/multiselect": "^2.5.8",
+    "bulma": "^0.9.4",
+    "bulma-extensions": "^6.2.7",
+    "http-proxy-middleware": "^2.0.6",
+    "https-proxy-agent": "^5.0.1",
+    "lodash.merge": "^4.6.2",
+    "morgan": "^1.10.0",
+    "socket.io-client": "^4.5.4",
+    "url": "^0.11.0",
+    "vue": "^3.2.41",
+    "vue-3-socket.io": "^1.0.5",
+    "vue-jwt-decode": "^0.1.0",
+    "vue-multiselect": "^3.0.0-alpha.2",
+    "vue-router": "^4.1.6",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vuex": "^4.0.2",
+    "vuex-persist": "^3.1.3",
+    "yaml": "^2.1.3"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@vitejs/plugin-vue": "^3.2.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.26.0",
+    "eslint-plugin-vue": "^9.6.0",
+    "http-server": "^14.1.1",
+    "prettier": "^2.7.1",
+    "sass": "^1.55.0",
+    "vite": "^3.2.1",
+    "vite-plugin-pwa": "^0.13.1"
+  },
+  "license": "Apache-2.0"
+}

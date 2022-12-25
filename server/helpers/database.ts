@@ -1,24 +1,25 @@
-const getDatabase = (db: any, sql: any) => {
+import { Database } from "sqlite3";
+
+const getDatabase = (db: Database, sql: string):  Promise<{ err: Error | null, row: any }> => {
     return new Promise((resolve) => {
-        db.get(sql, function (err: any, row: any) {
+        db.get(sql, function (err, row) {
             resolve({ err, row });
         });
     });
 }
 
-const getAllDatabase = (db: any, sql: any) => {
+const getAllDatabase = (db: Database, sql: string):  Promise<{ err: Error | null, row: any }> => {
     return new Promise((resolve) => {
-        db.all(sql, function (err: any, row: any) {
+        db.all(sql, function (err, row) {
             resolve({ err, row });
         });
     });
 }
 
-const writeDatabase = (db: any, sql: any, params: any) => {
+const writeDatabase = (db: Database, sql: string, params: any[]):  Promise<boolean> => {
     return new Promise((resolve) => {
-        db.run(sql, params, function(this: any, err: any) {
-            // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
-            resolve(!!err, this);
+        db.run(sql, params, function(this, err) {
+            resolve(!!err);
         });
     });
 }

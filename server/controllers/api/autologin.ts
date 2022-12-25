@@ -1,4 +1,4 @@
-import db from '../../db/connect.js'
+import db from '../../db/connect'
 
 function users(req: any, res: any) {
     // Get current user from the database using the user.id from the JWT token

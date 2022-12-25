@@ -1,6 +1,6 @@
 // @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken';
-import config from '../config.js';
+import config from '../config';
 
 function jwtVerify(req: any, res: any, next: any) {
 

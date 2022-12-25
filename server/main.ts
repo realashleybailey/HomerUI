@@ -1,68 +1,122 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'expr... Remove this comment to see the full error message
-import express from 'express';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'body... Remove this comment to see the full error message
-import bodyParser from 'body-parser';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'morg... Remove this comment to see the full error message
-import morgan from 'morgan';
-import cors from 'cors';
+import express from "express";
+import bodyParser from "body-parser";
+// import morgan from "morgan";
+import cors from "cors";
 
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import { Server } from 'socket.io';
+import { createProxyMiddleware } from "http-proxy-middleware";
+import { Server } from "socket.io";
 
 // Load Routers
-import interfaceRouter from './routes/interface.js';
-import websocketRouter from './routes/websocket.js';
-import apiRouter from './routes/api.js';
+import websocketRouter from "./routes/websocket";
+import apiRouter from "./routes/api";
+
+import Tabler from "./helpers/tabler";
+// Debugging purposes
+
+
+const objFirst = {
+    server: "Homer V2",
+    host: "https://homer-v2.herokuapp.com",
+    port: "4040",
+}
+const objSecond = {
+    server: "Homer V2 Test",
+    host: "https://homer-v2.herokuapp.com",
+    port: "4141",
+}
+const objThird = {
+    server: "Homer V2 Test",
+    host: "https://homersaddsa-v2.herokuapp.com",
+    port: "4141",
+}
+
+const test = [objFirst, objSecond, objThird];
+
+const storeHosts: object[] = [];
+const tabler = new Tabler({ padding: 3, colors: ['\x1b[33m', '\x1b[32m', '\x1b[35m'] })
+
+const updateConsole = (data: any) => {
+    storeHosts.push(data);
+    console.clear();
+    tabler.buildTable(storeHosts, ["SERVER", "HOST", "PORT"]);
+}
+
+
+///////////////////////////////////////////////////////////////////
+////////////////////// PRODUCTION SERVER //////////////////////////
+///////////////////////////////////////////////////////////////////
 
 // Create Express App
 const APP = express();
 const PORT = process.env.PORT || 5252;
 
+// Start server
+const SERVER = APP.listen(PORT, () => {
+    updateConsole({
+        server: "Homer V2",
+        host: "http://127.0.0.1",
+        port: PORT.toString()
+    })
+});
+
+// Start SOCKET.IO server
+const IO = new Server(SERVER, {
+    allowEIO3: true,
+    path: "/ws"
+});
+
+
+// Load websocket router
+websocketRouter(IO);
+
 // Enable CORS and JSON body parsing
-APP.use(cors({ origin: '*' }))
+APP.use(cors({ origin: "*" }));
 APP.use(bodyParser.json());
-APP.use(morgan('tiny'));
+// APP.use(morgan("tiny"));
 
 // Serve entire public folder
-APP.use('/api', apiRouter);
+APP.use("/api", apiRouter);
 
-APP.use('/', express.static('../dist'));
-APP.use('/', (req: any, res: any) => {
-    res.sendFile('index.html', { root: '../dist' });
+APP.use("/", express.static("../dist"));
+APP.use(/(?!(\/ws|\/socket.io)).*/, (req, res) => {
+  res.sendFile("index.html", { root: "../dist" });
 });
 
 ///////////////////////////////////////////////////////////////////
 //////////// TEST SERVER FOR DEVELOPMENT PURPOSES /////////////////
 ///////////////////////////////////////////////////////////////////
 
-// Start server
-const SERVER = APP.listen(PORT, () => {
-    console.log('Homer V2 is running on port ' + PORT);
-});
 
+// Create Express App
 const TEST = express();
 const TEST_PORT = 5353;
 
 // Start TEST server
 const TEST_SERVER = TEST.listen(TEST_PORT, () => {
-    console.log('Homer V2 test is running on port ' + TEST_PORT);
+    updateConsole({
+        server: "Homer V2 Test",
+        host: "http://127.0.0.1",
+        port: TEST_PORT.toString()
+    })
 });
 
 // Start SOCKET.IO server
-const io = new Server(TEST_SERVER, {
-    allowEIO3: true,
-    path: '/ws',
+const TEST_IO = new Server(TEST_SERVER, {
+  allowEIO3: true,
+  path: "/ws"
 });
 
-websocketRouter(io);
+// Load websocket router
+websocketRouter(TEST_IO);
 
 // Enable CORS and JSON body parsing and MORGAN logging
-TEST.use(cors({ origin: '*' }))
+TEST.use(cors({ origin: "*" }));
 TEST.use(bodyParser.json());
 // TEST.use(morgan('tiny'));
 
-TEST.use('/api', apiRouter);
+// Serve entire public folder
+TEST.use("/api", apiRouter);
 TEST.use(/(?!(\/ws|\/socket.io)).*/, createProxyMiddleware({
     target: "http://localhost:5173",
-    changeOrigin: true,
+    changeOrigin: true
 }));
