@@ -10,7 +10,14 @@ export default defineConfig({
   build: {
     assetsDir: "resources",
   },
-  server: { hmr: { port: 6060 }, },
+  server: {
+    hmr: {
+      port: 6060
+    },
+  },
+  preview: {
+    port: 8181,
+  },
   plugins: [
     vue(),
     VitePWA({

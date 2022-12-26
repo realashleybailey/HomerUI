@@ -4,8 +4,8 @@
   "scripts": {
     "dev": "vite",
     "mock": "http-server dummy-data/ --cors",
-    "build": "vite build --watch",
-    "preview": "vite preview --port 5050",
+    "build": "vite build",
+    "preview": "vite preview --port 8181",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
+    "@types/node": "^18.11.17",
     "@vitejs/plugin-vue": "^3.2.0",
     "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.26.0",

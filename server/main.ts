@@ -1,7 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
-// import morgan from "morgan";
+import morgan from "morgan";
 import cors from "cors";
+import { join } from "path";
 
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { Server } from "socket.io";
@@ -13,25 +14,6 @@ import apiRouter from "./routes/api";
 import Tabler from "./helpers/tabler";
 // Debugging purposes
 
-
-const objFirst = {
-    server: "Homer V2",
-    host: "https://homer-v2.herokuapp.com",
-    port: "4040",
-}
-const objSecond = {
-    server: "Homer V2 Test",
-    host: "https://homer-v2.herokuapp.com",
-    port: "4141",
-}
-const objThird = {
-    server: "Homer V2 Test",
-    host: "https://homersaddsa-v2.herokuapp.com",
-    port: "4141",
-}
-
-const test = [objFirst, objSecond, objThird];
-
 const storeHosts: object[] = [];
 const tabler = new Tabler({ padding: 3, colors: ['\x1b[33m', '\x1b[32m', '\x1b[35m'] })
 
@@ -42,13 +24,16 @@ const updateConsole = (data: any) => {
 }
 
 
+
 ///////////////////////////////////////////////////////////////////
 ////////////////////// PRODUCTION SERVER //////////////////////////
 ///////////////////////////////////////////////////////////////////
 
 // Create Express App
+if (process.env.NODE_ENV == "prod") {
+ 
 const APP = express();
-const PORT = process.env.PORT || 5252;
+const PORT = process.env.PORT || 8181;
 
 // Start server
 const SERVER = APP.listen(PORT, () => {
@@ -72,21 +57,22 @@ websocketRouter(IO);
 // Enable CORS and JSON body parsing
 APP.use(cors({ origin: "*" }));
 APP.use(bodyParser.json());
-// APP.use(morgan("tiny"));
 
 // Serve entire public folder
 APP.use("/api", apiRouter);
 
-APP.use("/", express.static("../dist"));
+APP.use("/", express.static(join(__dirname, "../app/dist")));
 APP.use(/(?!(\/ws|\/socket.io)).*/, (req, res) => {
-  res.sendFile("index.html", { root: "../dist" });
+  res.sendFile("index.html", { root: join(__dirname, "../app/dist") });
 });
+
+}
 
 ///////////////////////////////////////////////////////////////////
 //////////// TEST SERVER FOR DEVELOPMENT PURPOSES /////////////////
 ///////////////////////////////////////////////////////////////////
 
-
+if (process.env.NODE_ENV == "dev") {
 // Create Express App
 const TEST = express();
 const TEST_PORT = 5353;
@@ -112,7 +98,7 @@ websocketRouter(TEST_IO);
 // Enable CORS and JSON body parsing and MORGAN logging
 TEST.use(cors({ origin: "*" }));
 TEST.use(bodyParser.json());
-// TEST.use(morgan('tiny'));
+TEST.use(morgan('tiny'));
 
 // Serve entire public folder
 TEST.use("/api", apiRouter);
@@ -120,3 +106,5 @@ TEST.use(/(?!(\/ws|\/socket.io)).*/, createProxyMiddleware({
     target: "http://localhost:5173",
     changeOrigin: true
 }));
+
+}

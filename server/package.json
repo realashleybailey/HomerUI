@@ -4,8 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon ./main.ts"
+    "start:dev": "NODE_ENV=dev npx nodemon ./main.ts",
+    "start:prod": "NODE_ENV=prod ts-node ./main.ts"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "http": "^0.0.1-security",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
     "node-cache": "^5.1.2",
     "nodemon": "^2.0.20",
     "serve-index": "^1.9.1",

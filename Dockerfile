@@ -1,38 +1,43 @@
-# build stage
-FROM node:lts-alpine as build-stage
+FROM node:16.15-alpine
 
+## Install Frontend App
 WORKDIR /app
 
-COPY package*.json ./
-RUN yarn install --frozen-lockfile
+COPY ./app/package*.json ./
+RUN npm install
 
-COPY . .
-RUN yarn build
+COPY ./app .
+RUN npm run build
 
-# production stage
-FROM alpine:3.16
+## Install Backend Server
+WORKDIR /server
 
-ENV GID 1000
-ENV UID 1000
-ENV PORT 8080
-ENV SUBFOLDER "/_"
-ENV INIT_ASSETS 1
+COPY ./server/package*.json ./
+RUN npm install
 
-RUN addgroup -S lighttpd -g ${GID} && adduser -D -S -u ${UID} lighttpd lighttpd && \
-    apk add -U --no-cache lighttpd
+COPY ./server .
+# RUN npm run build
 
-WORKDIR /www
 
-COPY lighttpd.conf /lighttpd.conf
-COPY entrypoint.sh /entrypoint.sh
-COPY --from=build-stage --chown=${UID}:${GID} /app/dist /www/
-COPY --from=build-stage --chown=${UID}:${GID} /app/dist/assets /www/default-assets
+## Start Server
+ENV PORT 8181
 
-USER ${UID}:${GID}
+#CMD ["tail", "-f", "/dev/null"]
+
+WORKDIR /server
+
+# COPY lighttpd.conf /lighttpd.conf
+# COPY entrypoint.sh /entrypoint.sh
+# COPY --from=build-stage --chown=${UID}:${GID} /app/dist /www/
+# COPY --from=build-stage --chown=${UID}:${GID} /app/dist/assets /www/default-assets
+
+# USER ${UID}:${GID}
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:${PORT}/ || exit 1
 
 EXPOSE ${PORT}
 
-ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
+CMD ["npm", "run", "start:prod"]
+
+# ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
