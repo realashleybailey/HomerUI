@@ -100,6 +100,9 @@ export default {
 
     // Load settings from api
     store.dispatch("getSettings");
+    store.dispatch("loadServices");
+    store.dispatch("loadGroups");
+    store.dispatch("loadSupportedApps");
   },
   methods: {
     searchHotkey() {

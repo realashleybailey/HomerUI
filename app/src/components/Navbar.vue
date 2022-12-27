@@ -33,8 +33,13 @@
             </router-link>
 
             <router-link class="navbar-item is-hidden-desktop" :to="'/add-service'" v-if="loggedIn">
-              <i class="fas fa-fw fa-gear mr-2"></i>
+              <i class="fas fa-fw fa-plus mr-2"></i>
               Add Service
+            </router-link>
+
+            <router-link class="navbar-item is-hidden-desktop" :to="'/edit-service'" v-if="loggedIn">
+              <i class="fas fa-fw fa-pen-to-square mr-2"></i>
+              Edit Service
             </router-link>
 
             <router-link class="navbar-item is-hidden-desktop" :to="'/settings'" v-if="loggedIn">

@@ -1,6 +1,4 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'json... Remove this comment to see the full error message
 import jwt from 'jsonwebtoken';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'bcry... Remove this comment to see the full error message
 import bcrypt from 'bcrypt';
 import config from '../../config';
 import db from '../../db/connect'

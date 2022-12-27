@@ -2,7 +2,7 @@
     <section class="section">
         <div class="container">
 
-            <Multiselect v-model="value" :searchable="true" placeholder="Select or Search for service" label="name" :options="options">
+            <Multiselect v-model="value" :searchable="true" placeholder="Select or Search for service" label="name" :options="supportedApps" @clear="clearValue()">
                 <template v-slot:singlelabel="{ value }">
                     <div class="multiselect-single-label">
                         <img class="is-icon" :src="`/assets/tools/${value.icon}`" :onerror="`this.onerror=null; this.src='${logo}'`">
@@ -15,6 +15,13 @@
                     {{ option.name }}
                 </template>
             </Multiselect>
+
+            <article v-if="value == null">
+                <div class="m-6 has-text-centered py-6">
+                    <p class="is-size-5 mb-0">No service selected!</p>
+                    <p>Please select a service from the dropdown above.</p>
+                </div>
+            </article>
 
             <div v-if="value" class="mt-5">
                 <div class="card has-text-light-dark" style="transform: none;">
@@ -40,6 +47,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -50,20 +58,50 @@
 
                 <div class="mt-4">
 
-                    <div class="columns has-text-light-dark">
-                        <div class="column">
+                    <div class="columns has-text-light-dark is-multiline">
+                        <div class="column is-half">
                             <div class="field">
                                 <label class="label has-text-light-dark">Service Name *</label>
                                 <div class="control">
-                                    <input class="input" type="text" :value="value.name">
+                                    <input class="input" type="text" v-model="form.name">
                                 </div>
                             </div>
                         </div>
-                        <div class="column">
-                            <div class="field">
-                                <label class="label has-text-light-dark">Service URL *</label>
+                        <div class="column is-half">
+                            <label class="label has-text-light-dark">Service URL *</label>
+                            <div class="field has-addons">
                                 <div class="control">
-                                    <input class="input" type="text">
+                                    <div class="select">
+                                        <select v-model="form.protocol">
+                                            <option value="http://">http://</option>
+                                            <option value="https://" selected>https://</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control" style="width: 100%;">
+                                    <input class="input" type="text" v-model="form.url">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label has-text-light-dark">Service Icon</label>
+                                <div class="control">
+                                    <input class="input" type="text" v-model="form.icon">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label has-text-light-dark">Service Group *</label>
+                                <div class="control">
+                                    <div class="select" style="width: 100%;">
+                                        <select style="width: 100%;" v-model="form.group">
+                                            <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +110,12 @@
                     <template v-if="fields">
                         <div class="divider">
                             <div class="divider-text has-text-light-dark">Service API (Optional)</div>
+                        </div>
+                        <div class="pb-4 is-flex is-justify-content-end	">
+                            <div class="field">
+                                <input id="toggleAPI" name="toggleAPI" type="checkbox" class="switch is-rounded is-info">
+                                <label for="toggleAPI" class="label has-text-light-dark"></label>
+                            </div>
                         </div>
                         <div class="columns has-text-light-dark is-multiline">
                             <div class="column is-half" v-for="field in fields">
@@ -103,6 +147,10 @@
 
 .divider.no-text:not(.is-right):after {
     margin-left: 0px;
+}
+
+.multiselect-search {
+    color: white;
 }
 
 .is-dark {
@@ -140,6 +188,7 @@
 }
 
 .is-dark {
+    --ms-font-color: #fff;
     --ms-font-size: 1.3rem;
     --ms-line-height: 1.375;
     --ms-bg: var(--card-background);
@@ -242,7 +291,6 @@ export default {
     data() {
         return {
             value: null,
-            options: [],
             fields: null,
             form: [],
 
@@ -252,26 +300,39 @@ export default {
     computed: {
         logo: function () {
             return store.getters.logo;
+        },
+        supportedApps: function () {
+            const apps = store.getters.supportedApps;
+
+            return apps.map(app => {
+                return {
+                    value: app,
+                    name: app.name,
+                    icon: app.icon,
+                }
+            });
+        },
+        groups: function () {
+            return store.getters.groups;
         }
     },
     async created() {
-        const data = await fetch('/api/supportedapps');
-        const apps = (await data.json()).apps;
 
-        this.options = apps.map(app => {
-            return {
-                value: app,
-                name: app.name,
-                icon: app.icon,
-            }
-        });
-
-        window.test = this
     },
     watch: {
         value: function (value) {
             this.fields = null;
+            this.form = [];
+            if (value === null) return;
             this.updateFields(value);
+
+            this.form.name = value.name;
+            this.form.protocol = "https://"
+            this.form.icon = value.icon;
+            this.form.group = 1;
+        },
+        form: function (value) {
+            console.log(value);
         }
     },
     methods: {
@@ -288,8 +349,9 @@ export default {
             }
         },
         testAPI() {
-            // Loop through the this.fields and check that all required fields are in this.form
-            // if they are not alert error
+
+            console.log(this.form);
+
             for (const element of this.fields) {
                 const field = element;
                 if (field.required && !this.form[field.name]) {
@@ -306,7 +368,10 @@ export default {
         },
         cleanUrl(url) {
             return url.replace(/(^\w+:|^)\/\//, '').replace('www.', '');
-        }
+        },
+        clearValue() {
+            this.value = null;
+        },
     }
 }
 </script>

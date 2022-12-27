@@ -13,7 +13,7 @@
 
                 <!-- Horizontal layout -->
                 <div v-if="!vLayout || filter" class="columns is-multiline">
-                    <template v-for="(group, groupIndex) in services">
+                    <template v-for="(group, groupIndex) in dashboard">
                         <h2 v-if="group.name" class="column is-full group-title" :key="`header-${groupIndex}`">
                             <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
                             <div v-else-if="group.logo" class="group-logo media-left">
@@ -29,7 +29,7 @@
 
                 <!-- Vertical layout -->
                 <div v-if="!filter && vLayout" class="columns is-multiline layout-vertical">
-                    <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in services" :key="groupIndex">
+                    <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in dashboard" :key="groupIndex">
                         <h2 v-if="group.name" class="group-title">
                             <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
                             <div v-else-if="group.logo" class="group-logo media-left">
@@ -48,9 +48,6 @@
 </template>
 
 <script>
-import { parse } from "yaml";
-import merge from "lodash.merge";
-
 import Navbar from "../components/Navbar.vue";
 import GetStarted from "../components/GetStarted.vue";
 import ConnectivityChecker from "../components/ConnectivityChecker.vue";
@@ -62,7 +59,6 @@ import UserAccount from "../components/UserAccount.vue";
 import DarkMode from "../components/DarkMode.vue";
 import DynamicTheme from "../components/DynamicTheme.vue";
 
-// import defaultConfig from "../assets/defaults.yml?raw";
 import store from "../store";
 
 export default {
@@ -82,20 +78,13 @@ export default {
     data: function () {
         return {
             loaded: false,
-            currentPage: null,
-            config: null,
-            // services: null,
             offline: false,
             filter: "",
-            isDark: null,
-            showMenu: false,
-            showLogin: false,
-            loginError: null,
         };
     },
     computed: {
         configurationNeeded: function () {
-            return (this.loaded && !this.services);
+            return (this.loaded && !this.dashboard);
         },
         connectivityChecker: function () {
             return store.getters.connectivityChecker;
@@ -112,70 +101,21 @@ export default {
         proxy: function () {
             return null;
         },
-        services: function () {
-            return store.getters.services;
+        dashboard: function () {
+            const groups = store.getters.groups;
+            const services = store.getters.services;
+
+            groups.forEach((group) => {
+                group.items = services.filter((service) => service.group_id === group.id);
+            });
+
+            return groups;
         },
     },
     created: async function () {
-
-        store.dispatch("loadServices");
-
-        this.buildDashboard();
-        window.onhashchange = this.buildDashboard;
         this.loaded = true;
     },
     methods: {
-        buildDashboard: async function () {
-            // const defaults = parse(defaultConfig);
-            // let config;
-            // try {
-            //     config = await this.getConfig();
-            //     this.currentPage = window.location.hash.substring(1) || "default";
-
-            //     if (this.currentPage !== "default") {
-            //         let pageConfig = await this.getConfig(
-            //             `assets/${this.currentPage}.yml`
-            //         );
-            //         config = Object.assign(config, pageConfig);
-            //     }
-            // } catch (error) {
-            //     console.log(error);
-            //     config = this.handleErrors("⚠️ Error loading configuration", error);
-            // }
-            // this.config = merge(defaults, config);
-
-            // document.title =
-            //     this.config.documentTitle ||
-            //     `${this.config.title} | ${this.config.subtitle}`;
-            // if (this.config.stylesheet) {
-            //     let stylesheet = "";
-            //     for (const file of this.config.stylesheet) {
-            //         stylesheet += `@import "${file}";`;
-            //     }
-            //     this.createStylesheet(stylesheet);
-            // }
-        },
-        // getConfig: function (path = "assets/config.yml") {
-        //     return fetch(path).then((response) => {
-
-        //         if (!response.ok) {
-        //             throw Error(`${response.statusText}: ${response.body}`);
-        //         }
-
-        //         const that = this;
-        //         return response
-        //             .text()
-        //             .then((body) => {
-        //                 return parse(body);
-        //             })
-        //             .then(function (config) {
-        //                 if (config.externalConfig) {
-        //                     return that.getConfig(config.externalConfig);
-        //                 }
-        //                 return config;
-        //             });
-        //     });
-        // },
         matchesFilter: function (item) {
             const needle = this.filter?.toLowerCase();
             return (

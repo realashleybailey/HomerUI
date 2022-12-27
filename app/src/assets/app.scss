@@ -3,11 +3,15 @@
 @import "./webfonts/webfonts.scss";
 // @import "../../node_modules/bulma/bulma";
 @import "../../node_modules/bulma/bulma.sass";
-@import "../../node_modules/bulma-extensions/bulma-iconpicker/dist/css/bulma-iconpicker.sass";
+@import "../../node_modules/bulma-extensions/dist/css/bulma-extensions.min.css";
+
 @import "./components/status.scss";
 @import "@vueform/multiselect/themes/default.css";
 @import "../../node_modules/@creativebulma/bulma-divider/dist/bulma-divider.min.css";
 
+@import "../../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css";
+@import "../../node_modules/@fortawesome/fontawesome-free/css/brands.css";
+@import "../../node_modules/@fortawesome/fontawesome-free/css/solid.css";
 
 // Themes import
 @import "./themes/sui.scss";
@@ -18,9 +22,82 @@
   text-overflow: ellipsis;
 }
 
-* {
-  transition: .2s all;
-  -webkit-transition: .2s all;
+// * {
+//   transition: .2s all;
+//   -webkit-transition: .2s all;
+// }
+.container {
+  transition: .2s max-width;
+  -webkit-transition: .2s max-width;
+}
+
+body #app.is-dark {
+
+  .modal-card-title {
+    color: rgb(255, 255, 255);
+  }
+
+  .modal-card-head,
+  .modal-card-foot {
+    background-color: var(--background);
+  }
+
+  .modal-card-body {
+    background-color: var(--background);
+  }
+
+  .select select,
+  .textarea,
+  .input {
+    background-color: hsl(0deg 0% 12%);
+    border-color: hsl(0deg 0% 26%);
+    border-radius: 4px;
+    color: rgb(255, 255, 255);
+  }
+
+  .has-addons .control:first-child * {
+    border-radius: 4px 0 0 4px !important;
+  }
+
+  .has-addons .control:last-child * {
+    border-radius: 0 4px 4px 0 !important;
+  }
+
+  .has-addons .control * {
+    border-radius: 0px;
+  }
+
+  // .has-addons 
+
+  .select,
+  .input::placeholder {
+    color: rgb(195, 193, 193);
+  }
+
+  .table {
+    color: hsl(0deg, 0%, 100%);
+    background-color: hsl(0deg 0% 12%);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .table tbody {
+    border: 1px solid hsl(0deg 0% 26%);
+    border-width: 1px 1px 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .table.is-striped tbody tr:not(.is-selected):nth-child(even) {
+    background-color: hsl(0deg 0% 12%);
+  }
+
+  .table td,
+  .table th {
+    border: 1px solid hsl(0deg 0% 26%);
+    border-width: 0 0 1px;
+  }
+
 }
 
 html,

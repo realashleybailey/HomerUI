@@ -34,18 +34,19 @@ async function setSettings(req: any, res: any) {
     const data = req.body || null;
 
     // Loop break
-    let error = false;
+    let error;
 
     // Loop through the data
     for (const [key, value] of Object.entries(data)) {
 
         // Update the setting in the database
-        // @ts-expect-error TS(2339): Property 'err' does not exist on type 'unknown'.
         const { err } = await writeDatabase(db, 'UPDATE settings SET ' + key + ' = ? WHERE id = ?', [value, settingsId]);
 
         // If there is an error, set the error to err and break the loop
-        if (err) error = err;
-        if (err) break;
+        if (err) {
+            error = err;
+            break;
+        }
     }
 
     // If there is an error, return an error

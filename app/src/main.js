@@ -9,7 +9,7 @@ import store from "./store";
 import router from "./router";
 
 import "vue-toastification/dist/index.css";
-import "bulma-extensions/bulma-iconpicker/dist/js/bulma-iconpicker.min";
+// import "bulma-extensions/src/js/index.js";
 
 import "@fortawesome/fontawesome-free/css/all.css";
 import "./assets/app.scss";

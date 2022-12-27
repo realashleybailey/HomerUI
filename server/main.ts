@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-import morgan from "morgan";
 import cors from "cors";
+
 import { join } from "path";
 
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -12,6 +12,11 @@ import websocketRouter from "./routes/websocket";
 import apiRouter from "./routes/api";
 
 import Tabler from "./helpers/tabler";
+import morganMiddleware from "./middleware/morgan";
+
+import swaggerUI from "swagger-ui-express";
+import swaggerDOC from "./swagger.json";
+
 // Debugging purposes
 
 const storeHosts: object[] = [];
@@ -98,13 +103,16 @@ websocketRouter(TEST_IO);
 // Enable CORS and JSON body parsing and MORGAN logging
 TEST.use(cors({ origin: "*" }));
 TEST.use(bodyParser.json());
-TEST.use(morgan('tiny'));
+TEST.use(morganMiddleware);
 
 // Serve entire public folder
 TEST.use("/api", apiRouter);
+TEST.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerDOC));
+
 TEST.use(/(?!(\/ws|\/socket.io)).*/, createProxyMiddleware({
     target: "http://localhost:5173",
     changeOrigin: true
 }));
 
 }
+

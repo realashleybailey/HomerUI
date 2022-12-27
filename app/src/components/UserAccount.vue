@@ -12,12 +12,19 @@
             </a>
             <div v-if="loggedIn">
                 <router-link tag="a" class="navbar-item" to="/add-service">
+                    <i class="fas fa-fw fa-plus mr-2"></i>
                     Add Service
                 </router-link>
+                <router-link tag="a" class="navbar-item" to="/edit-service">
+                    <i class="fas fa-fw fa-pen-to-square mr-2"></i>
+                    Edit Service
+                </router-link>
                 <router-link tag="a" class="navbar-item" to="/settings">
+                    <i class="fas fa-fw fa-gear mr-2"></i>
                     Settings
                 </router-link>
                 <a class="navbar-item" @click="logout()">
+                    <i class="fas fa-fw fa-sign-out-alt mr-2"></i>
                     Logout
                 </a>
             </div>

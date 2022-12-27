@@ -79,7 +79,9 @@ const store = createStore({
                 disabled: false,
             },
             socket: null,
-            isDark: false
+            isDark: false,
+            groups: [],
+            supportedApps: [],
         }
     },
     mutations: {
@@ -137,6 +139,16 @@ const store = createStore({
         setServices(state, services) {
             state.services = services
         },
+        addService(state, service) {
+            state.services.push(service)
+        },
+        updateService(state, { id, service }) {
+            const index = state.services.findIndex(s => s.id === id)
+            state.services[index] = service
+        },
+        deleteService(state, id) {
+            state.services = state.services.filter(s => s.id !== id)
+        },
         setConnectivityCheck(state, connectivityCheck) {
             state.connectivityCheck = connectivityCheck
         },
@@ -148,6 +160,12 @@ const store = createStore({
         },
         setDark(state, isDark) {
             state.isDark = isDark
+        },
+        setGroups(state, groups) {
+            state.groups = groups
+        },
+        setSupportedApps(state, supportedApps) {
+            state.supportedApps = supportedApps
         }
     },
     getters: {
@@ -207,6 +225,12 @@ const store = createStore({
         },
         isDark(state) {
             return state.isDark
+        },
+        groups(state) {
+            return state.groups
+        },
+        supportedApps(state) {
+            return state.supportedApps
         }
     },
     actions: {
@@ -381,6 +405,152 @@ const store = createStore({
             }
 
         },
+        async loadGroups({ commit }) {
+
+            // Get the groups from the API using token authentication
+            const response = await fetch('/api/groups', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.state.token
+                },
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to get groups')
+            }
+
+            // Get the groups from the response
+            const groups = await response.json()
+
+            // Set the groups in the state
+            commit('setGroups', groups)
+        },
+        async loadSupportedApps({ commit }) {
+
+            // Get the supported apps from the API
+            const response = await fetch('/api/supportedapps', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to get supported apps')
+            }
+
+            // Get the supported apps from the response
+            let supportedApps = await response.json()
+
+            // If the supported apps are null, set them to an empty array
+            if (supportedApps.apps) supportedApps = supportedApps.apps
+
+            // Set the supported apps in the state
+            commit('setSupportedApps', supportedApps)
+        },
+        async getServices({ state }) {
+            // Get the services from the API using token authentication
+            const response = await fetch('/api/service', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': state.token,
+                },
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to get services')
+            }
+
+            // Get the services from the response
+            const services = await response.json()
+
+            // Return the services
+            return services
+        },
+        async getService({ state }, id) {
+            // Get the service from the API using token authentication
+            const response = await fetch(`/api/services/${id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': state.token,
+                },
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to get service' + id)
+            }
+
+            // Get the service from the response
+            const service = await response.json()
+
+            // Return the service
+            return service
+        },
+        async createService({ commit, state }, service) {
+            // Create the service in the API using token authentication
+            const response = await fetch('/api/createservice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': state.token,
+                },
+                body: service
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to create service')
+            }
+
+            // Add the service to the state
+            commit('addService', service)
+
+            // Return the service
+            return service
+        },
+        async updateService({ commit, state }, { id, service }) {
+            // Update the service in the API using token authentication
+            const response = await fetch('/api/service/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': state.token,
+                },
+                body: service
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to update service')
+            }
+
+            // Update the service in the state
+            commit('updateService', { id, service })
+
+            // Return the service
+            return service
+        },
+        async deleteService({ commit, state }, id) {
+            // Delete the service from the API using token authentication
+            const response = await fetch('/api/service/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': state.token,
+                }
+            })
+
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error('Failed to delete service')
+            }
+
+            // Delete the service from the state
+            commit('deleteService', id)
+        }
     },
     plugins: [vuexLocal.plugin],
     modules: {
