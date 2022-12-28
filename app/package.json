@@ -1,6 +1,6 @@
 {
-  "name": "homer",
-  "version": "22.07.2",
+  "name": "homerui",
+  "version": "1.07.2",
   "scripts": {
     "dev": "vite",
     "mock": "http-server dummy-data/ --cors",

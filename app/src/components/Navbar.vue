@@ -58,7 +58,7 @@
           <div class="navbar-end">
 
             <DarkMode @updated="isDarkToggle($event)" :defaultValue="this.defaults.colorTheme" class="mr-2" />
-            <SettingToggle name="vLayout" icon="fa-list" iconAlt="fa-columns" :defaultValue="this.defaults.layout == 'columns'" class="is-hidden-touch mr-2" />
+            <SettingToggle name="vLayout" icon="fa-list" iconAlt="fa-columns" :defaultValue="this.defaults.layout == 'columns'" class="is-hidden-touch mr-2" v-if="home" />
             <UserAccount icon="fa-user" iconAlt="fa-user" />
 
             <a class="navbar-item is-inline-block-mobile mr-2 is-hidden-desktop" @click="logout()" v-if="loggedIn">
@@ -96,6 +96,7 @@ export default {
     return {
       isDark: null,
       open: false,
+      home: false,
     };
   },
   computed: {
@@ -115,6 +116,9 @@ export default {
   watch: {
     '$route'(to, from) {
       this.open = false;
+
+      if (to.name == "Home") this.home = true;
+      else this.home = false;
     }
   },
   methods: {

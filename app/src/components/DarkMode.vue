@@ -23,9 +23,11 @@ export default {
   created: function () {
     this.mode = store.getters.colorTheme;
 
-    this.isDark = this.getIsDark();
-    this.$emit("updated", this.isDark);
-    store.commit("setDark", this.isDark);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      this.isDark = this.getIsDark();
+      this.$emit("updated", this.isDark);
+      store.commit("setDark", this.isDark);
+    });
   },
   methods: {
     toggleTheme: function () {

@@ -10,7 +10,7 @@ const routes = [
     },
     {
         path: '/add-service',
-        name: 'AddApp',
+        name: 'Add Service',
         component: () => import('./views/AddService.vue'),
         meta: { auth: true },
     },
@@ -37,6 +37,12 @@ const routes = [
 const router = new createRouter({
     history: createWebHistory(),
     routes,
+});
+
+// Set page title
+router.beforeEach((to, from, next) => {
+    document.title = `${to.name} | HomerUI`
+    next();
 });
 
 // Check authentication token
