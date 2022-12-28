@@ -1,7 +1,7 @@
 <h1 align="center">
  <img width="180" alt="Homer's donut" src="https://raw.githubusercontent.com/bastienwirtz/homer/main/public/logo.png">
     <br/>
-    Homer V2
+    HomerUI
 </h1>
 
 <h4 align="center">
