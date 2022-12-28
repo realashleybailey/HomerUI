@@ -1,6 +1,6 @@
 <template>
     <section id="main-section" class="section">
-        <div class="container p-5 settings">
+        <div class="container p-5 settings" v-if="hideMain">
 
             <article class="message is-warning">
                 <div class="message-body">
@@ -199,7 +199,7 @@
             </div>
 
 
-            <div v-if="addLink" id="modal-link" class="modal" :class="{ 'is-active': addLink }">
+            <!-- <div v-if="addLink" id="modal-link" class="modal" :class="{ 'is-active': addLink }">
 
                 <div class="modal-background" @click="addLinkToggle()"></div>
 
@@ -239,7 +239,6 @@
                             </p>
                         </div>
                         <div class="field">
-                            <!-- Dropdown to select how the link should be opened -->
                             <div class="select">
                                 <select v-model="addLink.target">
                                     <option value="_self">Open in same tab
@@ -256,6 +255,8 @@
 
                 </div>
             </div>
+
+
 
             <div v-if="editLink" id="modal-link" class="modal" :class="{ 'is-active': editLink }">
 
@@ -297,7 +298,6 @@
                             </p>
                         </div>
                         <div class="field">
-                            <!-- Dropdown to select how the link should be opened -->
                             <div class="select">
                                 <select v-model="editLink.target">
                                     <option value="_self">Open in same tab
@@ -313,8 +313,99 @@
                     </section>
 
                 </div>
-            </div>
+            </div> -->
 
+        </div>
+        <div class="container p-5 settings" v-if="!hideMain">
+            <div class="buttons is-left">
+                <button class="button is-small is-link" style="background-color: var(--highlight-secondary)" @click="backMain()">Back</button>
+            </div>
+            <template v-if="addLink">
+                <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                        <input v-model="addLink.name" class="input" type="text" placeholder="Name">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-font"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control has-icons-left">
+                        <input v-model="addLink.url" class="input" type="text" placeholder="URL">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-link"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                        <input v-model="addLink.icon" class="input" type="text" placeholder="Font Awesome Icon">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-icons"></i>
+                        </span>
+                        <span class="icon is-small is-right">
+                            <i class="fas" :class="[addLink.icon]"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <!-- Dropdown to select how the link should be opened -->
+                    <div class="select">
+                        <select v-model="addLink.target">
+                            <option value="_self">Open in same tab
+                            </option>
+                            <option value="_blank">Open in new tab
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="buttons is-right">
+                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushAddedLink()">Add Link</button>
+                </div>
+            </template>
+            <template v-if="editLink">
+                <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                        <input v-model="editLink.name" class="input" type="text" placeholder="Name">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-font"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control has-icons-left">
+                        <input v-model="editLink.url" class="input" type="text" placeholder="URL">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-link"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                        <input v-model="editLink.icon" class="input" type="text" placeholder="Font Awesome Icon">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-icons"></i>
+                        </span>
+                        <span class="icon is-small is-right">
+                            <i class="fas" :class="[editLink.icon]"></i>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <!-- Dropdown to select how the link should be opened -->
+                    <div class="select">
+                        <select v-model="editLink.target">
+                            <option value="_self">Open in same tab
+                            </option>
+                            <option value="_blank">Open in new tab
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="buttons is-right">
+                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushEditedLink()">Edit Link</button>
+                </div>
+            </template>
         </div>
     </section>
 </template>
@@ -344,7 +435,7 @@
 </style>
 
 <script>
-import store from '../store';
+import { store } from "../store";
 import { useToast } from "vue-toastification";
 
 export default {
@@ -367,7 +458,12 @@ export default {
 
             addLink: false,
             editLink: false,
+
+            windowTop: 0,
         }
+    },
+    mounted: function () {
+        window.addEventListener("scroll", this.onScroll, true);
     },
     computed: {
         title: function () {
@@ -384,9 +480,20 @@ export default {
         },
         footer: function () {
             return store.getters.footer;
-        }
+        },
+        hideMain: function () {
+            return !(this.addLink || this.editLink);
+        },
     },
     methods: {
+        onScroll(e) {
+            this.windowTop = e.target.scrollTop;
+        },
+        backMain: function () {
+            this.addLink = false;
+            this.editLink = false;
+            window.scrollTo(0, this.windowTop);
+        },
         saveSettings: function () {
             store.dispatch('saveSettings', {
                 title: this.titleText,

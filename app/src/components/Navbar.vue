@@ -74,11 +74,13 @@
 </template>
 
 <script>
-import store from "../store";
+;
 
 import SettingToggle from "./SettingToggle.vue";
 import UserAccount from "./UserAccount.vue";
 import DarkMode from "./DarkMode.vue";
+
+import { store } from "../store";
 
 export default {
   name: "Navbar",

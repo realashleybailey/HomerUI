@@ -282,8 +282,8 @@
 } */
 </style>
 <script>
-import Multiselect from '@vueform/multiselect'
-import store from '../store';
+import { store } from '../store';
+import Multiselect from '@vueform/multiselect';
 
 export default {
     name: 'App',

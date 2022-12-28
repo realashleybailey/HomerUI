@@ -6,7 +6,7 @@ services:
     #To build from source, comment previous line and uncomment below
     build: .
     restart: always
-    container_name: homerv2
+    container_name: homerUI
     # volumes:
     #   - ./dist/:/www/assets
     ports:

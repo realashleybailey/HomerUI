@@ -51,7 +51,7 @@ router.get("/auth/logout", jwtVerify, getLogout
 // Service Routes //
 ////////////////////
 
-router.get("/service", jwtVerify, getServices
+router.get("/service", getServices
 // #swagger.tags = ['Service']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of services', schema: { $ref: "#/definitions/ServicesResponse" } }
@@ -106,7 +106,7 @@ router.delete("/service/:id", jwtVerify, deleteService
 // Group Routes  //
 ///////////////////
 
-router.get("/group", jwtVerify, getGroups
+router.get("/group", getGroups
 // #swagger.tags = ['Group']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of groups', schema: { $ref: "#/definitions/GroupsResponse" } }

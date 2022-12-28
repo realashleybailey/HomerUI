@@ -60,8 +60,6 @@
 </style>
 
 <script>
-import store from "../store";
-
 export default {
     name: "UserAccount",
     props: {
@@ -76,15 +74,20 @@ export default {
     },
     computed: {
         loggedIn: function () {
-            return store.getters.isLoggedIn;
+            return this.$store.getters.isLoggedIn;
         },
         name: function () {
-            return store.getters.user.name;
+            return this.$store.getters.user.name;
         }
     },
     created: function () {
         this.secondaryIcon = this.iconAlt || this.icon;
-        window.test = store
+        window.test = this.$store
+    },
+    watch: {
+        '$route'(to, from) {
+            this.value = true;
+        }
     },
     methods: {
         toggleSetting: function () {
@@ -94,7 +97,7 @@ export default {
             this.$router.push("/login");
         },
         logout: function () {
-            store.dispatch("logout");
+            this.$store.dispatch("logout");
             this.value = true;
         },
     }

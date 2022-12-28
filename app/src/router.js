@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from './store';
+import { store } from './store';
+import { encode } from 'js-base64';
 
 const routes = [
     {
@@ -38,10 +39,26 @@ const router = new createRouter({
     routes,
 });
 
+// Check authentication token
+router.beforeEach(async (to, from, next) => {
+    let isTokenExpired = false;
+    if (store.getters.isLoggedIn) isTokenExpired = await store.dispatch('checkToken', store.getters.token);
+    if (isTokenExpired) next({ name: 'Login', query: { message: encode('Your session has expired. Please login again.', true) } });
+    else next();
+});
+
 // If route has meta.auth, check if user is authenticated
 router.beforeEach((to, from, next) => {
+    if (to.query.redirect && store.getters.isLoggedIn) {
+        next({ to: to.query.redirect });
+    } else {
+        next();
+    }
+});
+
+router.beforeEach((to, from, next) => {
     if (to.meta.auth && !store.getters.isLoggedIn) {
-        next({ name: 'Login' });
+        next({ name: 'Login', query: { redirect: to.fullPath } });
     } else {
         next();
     }

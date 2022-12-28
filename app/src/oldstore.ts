@@ -1,15 +1,17 @@
-import { createApp } from 'vue'
 import { createStore } from 'vuex'
 
 import VueJwtDecode from 'vue-jwt-decode'
 import VuexPersistence from 'vuex-persist'
 
 import router from './router'
-import queue from "./modules/queue";
+import queue from "./store/modules/queue";
 
 const vuexLocal = new VuexPersistence({
     storage: window.localStorage
 })
+
+
+import service from './store/service';
 
 
 const store = createStore({
@@ -70,7 +72,7 @@ const store = createStore({
             vLayout: true,
             footer: "Made with ❤️ by <a href='https://github.com/realashleybailey' target='_blank'>Ashley Bailey</a>",
             footerDisabled: false,
-            services: null,
+            // services: null,
             connectivityCheck: true,
             message: {
                 title: "👋 Welcome !",
@@ -101,7 +103,7 @@ const store = createStore({
             state.links.push(link)
         },
         removeLink(state, id) {
-            state.links = state.links.filter(link => link.id !== id)
+            state.links = state.links.filter(link => (link as any).id !== id)
         },
         setColors(state, colors) {
             state.colors = colors
@@ -136,19 +138,19 @@ const store = createStore({
         setFooterDisabled(state, footerDisabled) {
             state.footerDisabled = !!footerDisabled
         },
-        setServices(state, services) {
-            state.services = services
-        },
-        addService(state, service) {
-            state.services.push(service)
-        },
-        updateService(state, { id, service }) {
-            const index = state.services.findIndex(s => s.id === id)
-            state.services[index] = service
-        },
-        deleteService(state, id) {
-            state.services = state.services.filter(s => s.id !== id)
-        },
+        // setServices(state, services) {
+        //     state.services = services
+        // },
+        // addService(state, service) {
+        //     state.services.push(service)
+        // },
+        // updateService(state, { id, service }) {
+        //     const index = state.services.findIndex(s => s.id === id)
+        //     state.services[index] = service
+        // },
+        // deleteService(state, id) {
+        //     state.services = state.services.filter(s => s.id !== id)
+        // },
         setConnectivityCheck(state, connectivityCheck) {
             state.connectivityCheck = connectivityCheck
         },
@@ -211,9 +213,9 @@ const store = createStore({
         footerDisabled(state) {
             return !!state.footerDisabled
         },
-        services(state) {
-            return state.services
-        },
+        // services(state) {
+        //     return state.services
+        // },
         connectivityCheck(state) {
             return state.connectivityCheck
         },
@@ -449,112 +451,113 @@ const store = createStore({
             // Set the supported apps in the state
             commit('setSupportedApps', supportedApps)
         },
-        async getServices({ state }) {
-            // Get the services from the API using token authentication
-            const response = await fetch('/api/service', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': state.token,
-                },
-            })
+        // async getServices({ state }) {
+        //     // Get the services from the API using token authentication
+        //     const response = await fetch('/api/service', {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': state.token,
+        //         },
+        //     })
 
-            // If the response is not ok, throw an error
-            if (!response.ok) {
-                throw new Error('Failed to get services')
-            }
+        //     // If the response is not ok, throw an error
+        //     if (!response.ok) {
+        //         throw new Error('Failed to get services')
+        //     }
 
-            // Get the services from the response
-            const services = await response.json()
+        //     // Get the services from the response
+        //     const services = await response.json()
 
-            // Return the services
-            return services
-        },
-        async getService({ state }, id) {
-            // Get the service from the API using token authentication
-            const response = await fetch(`/api/services/${id}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': state.token,
-                },
-            })
+        //     // Return the services
+        //     return services
+        // },
+        // async getService({ state }, id) {
+        //     // Get the service from the API using token authentication
+        //     const response = await fetch(`/api/services/${id}`, {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': state.token,
+        //         },
+        //     })
 
-            // If the response is not ok, throw an error
-            if (!response.ok) {
-                throw new Error('Failed to get service' + id)
-            }
+        //     // If the response is not ok, throw an error
+        //     if (!response.ok) {
+        //         throw new Error('Failed to get service' + id)
+        //     }
 
-            // Get the service from the response
-            const service = await response.json()
+        //     // Get the service from the response
+        //     const service = await response.json()
 
-            // Return the service
-            return service
-        },
-        async createService({ commit, state }, service) {
-            // Create the service in the API using token authentication
-            const response = await fetch('/api/createservice', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': state.token,
-                },
-                body: service
-            })
+        //     // Return the service
+        //     return service
+        // },
+        // async createService({ commit, state }, service) {
+        //     // Create the service in the API using token authentication
+        //     const response = await fetch('/api/createservice', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': state.token,
+        //         },
+        //         body: service
+        //     })
 
-            // If the response is not ok, throw an error
-            if (!response.ok) {
-                throw new Error('Failed to create service')
-            }
+        //     // If the response is not ok, throw an error
+        //     if (!response.ok) {
+        //         throw new Error('Failed to create service')
+        //     }
 
-            // Add the service to the state
-            commit('addService', service)
+        //     // Add the service to the state
+        //     commit('addService', service)
 
-            // Return the service
-            return service
-        },
-        async updateService({ commit, state }, { id, service }) {
-            // Update the service in the API using token authentication
-            const response = await fetch('/api/service/' + id, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': state.token,
-                },
-                body: service
-            })
+        //     // Return the service
+        //     return service
+        // },
+        // async updateService({ commit, state }, { id, service }) {
+        //     // Update the service in the API using token authentication
+        //     const response = await fetch('/api/service/' + id, {
+        //         method: 'PUT',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': state.token,
+        //         },
+        //         body: service
+        //     })
 
-            // If the response is not ok, throw an error
-            if (!response.ok) {
-                throw new Error('Failed to update service')
-            }
+        //     // If the response is not ok, throw an error
+        //     if (!response.ok) {
+        //         throw new Error('Failed to update service')
+        //     }
 
-            // Update the service in the state
-            commit('updateService', { id, service })
+        //     // Update the service in the state
+        //     commit('updateService', { id, service })
 
-            // Return the service
-            return service
-        },
-        async deleteService({ commit, state }, id) {
-            // Delete the service from the API using token authentication
-            const response = await fetch('/api/service/' + id, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': state.token,
-                }
-            })
+        //     // Return the service
+        //     return service
+        // },
+        // async deleteService({ commit, state }, id) {
+        //     // Delete the service from the API using token authentication
+        //     const response = await fetch('/api/service/' + id, {
+        //         method: 'DELETE',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': state.token,
+        //         }
+        //     })
 
-            // If the response is not ok, throw an error
-            if (!response.ok) {
-                throw new Error('Failed to delete service')
-            }
+        //     // If the response is not ok, throw an error
+        //     if (!response.ok) {
+        //         throw new Error('Failed to delete service')
+        //     }
 
-            // Delete the service from the state
-            commit('deleteService', id)
-        }
+        //     // Delete the service from the state
+        //     commit('deleteService', id)
+        // }
     },
     plugins: [vuexLocal.plugin],
     modules: {
-        queue
+        queue,
+        service
     }
 })
 

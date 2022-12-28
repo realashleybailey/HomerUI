@@ -5,7 +5,7 @@ import Toast from "vue-toastification";
 import AppLink from './components/AppLink.vue';
 import VueSocketIO from 'vue-3-socket.io'
 
-import store from "./store";
+import { store } from "./store";
 import router from "./router";
 
 import "vue-toastification/dist/index.css";
@@ -15,6 +15,17 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "./assets/app.scss";
 
 const app = createApp(App);
+
+window.onerror = function (message, source, lineno, colno, error) {
+  console.log("Error: " + message + " in " + source + " at line " + lineno + " column " + colno);
+  console.log(error);
+};
+
+app.config.errorHandler = function (err, vm, info) {
+  console.log(err);
+  console.log(vm);
+  console.log(info);
+}
 
 app.use(new VueSocketIO({
   debug: false,

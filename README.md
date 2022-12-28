@@ -21,7 +21,7 @@
  <a href="https://opensource.org/licenses/Apache-2.0"><img
   alt="License: Apache 2"
   src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
-  <a href="https://github.com/realashlbailey/homerV2/releases/latest/download/homer.zip"><img
+  <a href="https://github.com/realashlbailey/HomerUI/releases/latest/download/homer.zip"><img
   alt="Download homer static build"
   src="https://img.shields.io/badge/Download-homer.zip-orange"></a>
  <a href="https://github.com/awesome-selfhosted/awesome-selfhosted"><img
@@ -30,12 +30,12 @@
 </p>
 
 <p align="center">
- <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/Dashboard.png?token=GHSAT0AAAAAABW45DINWCRB4S3N4D5QGUQMY5I2VGQ" width="15%">
- <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/AddService-Step1.png?token=GHSAT0AAAAAABW45DINYRL674GCAAVAWPAGY5I2WLA" width="15%">
- <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/AddService-Step2.png?token=GHSAT0AAAAAABW45DIMZ7KFEPRVUB4AYCESY5I2W4A" width="15%">
- <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/AddService-Step3-Small.png?token=GHSAT0AAAAAABW45DINGEGWYVJF47IT4YJWY5I2YPA" width="15%">
- <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/Settings-Small.png?token=GHSAT0AAAAAABW45DINL77JXYEV7DUM75AIY5I2ZQQ" width="15%">
- <img src="https://raw.githubusercontent.com/realashleybailey/HomerV2/main/docs/imgs/mobile/LoginPage.png?token=GHSAT0AAAAAABW45DINU3ADWB627GNNO7IGY5I22PQ" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerUI/main/docs/imgs/mobile/Dashboard.png?token=GHSAT0AAAAAABW45DINWCRB4S3N4D5QGUQMY5I2VGQ" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerUI/main/docs/imgs/mobile/AddService-Step1.png?token=GHSAT0AAAAAABW45DINYRL674GCAAVAWPAGY5I2WLA" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerUI/main/docs/imgs/mobile/AddService-Step2.png?token=GHSAT0AAAAAABW45DIMZ7KFEPRVUB4AYCESY5I2W4A" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerUI/main/docs/imgs/mobile/AddService-Step3-Small.png?token=GHSAT0AAAAAABW45DINGEGWYVJF47IT4YJWY5I2YPA" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerUI/main/docs/imgs/mobile/Settings-Small.png?token=GHSAT0AAAAAABW45DINL77JXYEV7DUM75AIY5I2ZQQ" width="15%">
+ <img src="https://raw.githubusercontent.com/realashleybailey/HomerUI/main/docs/imgs/mobile/LoginPage.png?token=GHSAT0AAAAAABW45DINU3ADWB627GNNO7IGY5I22PQ" width="15%">
 </p>
 
 ## Table of Contents
@@ -58,9 +58,9 @@
 
 ## Getting started
 
-HomerV2 is a dashboard, based on the original Homer. See [documentation](docs/configuration.md) for information about the configuration options.
+HomerUI is a dashboard, based on the original Homer. See [documentation](docs/configuration.md) for information about the configuration options.
 
-Unlike the original Homer, HomerV2 must be served by the included Express server, **it will not work if you simply host the dist**.
+Unlike the original Homer, HomerUI must be served by the included Express server, **it will not work if you simply host the dist**.
 
 ### Using docker
 
@@ -69,7 +69,7 @@ docker run -d \
   -p 8080:8080 \
   -v </your/local/assets/>:/www/assets \
   --restart=always \
-  realashleybailey/homerv2:latest
+  realashleybailey/HomerUI:latest
 ```
 
 The container will run using a user uid and gid 1000. Add `--user <your-UID>:<your-GID>` to the docker command to adjust it. Make sure this match the ownership of your assets directory.

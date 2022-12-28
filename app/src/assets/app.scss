@@ -69,7 +69,8 @@ body #app.is-dark {
 
   // .has-addons 
 
-  .select,
+  .textarea::placeholder,
+  .select::placeholder,
   .input::placeholder {
     color: rgb(195, 193, 193);
   }

@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
     info: {
-        title: 'HomerV2',
+        title: 'HomerUI',
         description: '',
         version: '1.0.0',
     },

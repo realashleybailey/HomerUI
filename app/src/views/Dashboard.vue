@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { store } from "../store";
 import Navbar from "../components/Navbar.vue";
 import GetStarted from "../components/GetStarted.vue";
 import ConnectivityChecker from "../components/ConnectivityChecker.vue";
@@ -59,7 +60,7 @@ import UserAccount from "../components/UserAccount.vue";
 import DarkMode from "../components/DarkMode.vue";
 import DynamicTheme from "../components/DynamicTheme.vue";
 
-import store from "../store";
+;
 
 export default {
     name: "App",
@@ -104,6 +105,16 @@ export default {
         dashboard: function () {
             const groups = store.getters.groups;
             const services = store.getters.services;
+
+            // If there are no services, return an empty array
+            if (!services || !services.length) {
+                return null;
+            }
+
+            // If there are no groups, return an array with a single group
+            if (!groups || !groups.length) {
+                return [{ name: "", items: services }];
+            }
 
             groups.forEach((group) => {
                 group.items = services.filter((service) => service.group_id === group.id);

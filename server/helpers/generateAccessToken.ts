@@ -13,7 +13,7 @@ export const generateAccessToken = (user: any): string => {
     delete user.autologin;
 
     // Expire the token in 7 days
-    const expiresIn = '7d';
+    const expiresIn = '24h';
     const secret = config.secret;
 
     // User object to be encoded in the JWT token

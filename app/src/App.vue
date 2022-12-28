@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import store from "./store";
 
+import { store } from './store/';
 import QueueController from './components/QueueController.vue';
 
 import Header from "./components/Header.vue";
@@ -68,7 +68,7 @@ export default {
       return store.getters.colors;
     },
     headerDisabled: function () {
-      return store.getters.headerDisabled;
+      return !!store.getters.headerDisabled;
     },
     logo: function () {
       return store.getters.logo;
@@ -89,7 +89,7 @@ export default {
       return store.getters.footer;
     },
     footerDisabled: function () {
-      return store.getters.footerDisabled;
+      return !!store.getters.footerDisabled;
     },
     isDark: function () {
       return store.getters.isDark;
@@ -97,12 +97,16 @@ export default {
   },
   created: async function () {
     this.loaded = true;
-
+    window.that = this;
+    window.store = store;
     // Load settings from api
     store.dispatch("getSettings");
-    store.dispatch("loadServices");
-    store.dispatch("loadGroups");
-    store.dispatch("loadSupportedApps");
+    store.dispatch("getServices");
+    store.dispatch("getGroups");
+    store.dispatch("getSupportedApps");
+    // store.dispatch("loadServices");
+    // store.dispatch("loadGroups");
+    // store.dispatch("loadSupportedApps");
   },
   methods: {
     searchHotkey() {

@@ -3,6 +3,7 @@
         <div class="login card">
             <div class="card-content" style="height: auto;">
                 <div class="content">
+                    <!-- <form> -->
                     <p class="title">
                         Login
                     </p>
@@ -22,11 +23,11 @@
                             </span>
                         </p>
                     </div>
-                    <!-- <span v-if="loginError" class="help is-danger">{{ loginError }}</span> -->
+                    <span v-if="loginError" class="help is-danger">{{ loginError }}</span>
                     <div class="buttons is-right">
-                        <button class="button is-link" style="background-color: var(--highlight-secondary)"
-                            @click="performLogin()">Login</button>
+                        <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="performLogin()">Login</button>
                     </div>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -69,8 +70,8 @@
 </style>
 
 <script>
-import store from "../store";
-import VueJwtDecode from 'vue-jwt-decode'
+import { store } from "../store";
+import { decode } from 'js-base64';
 
 export default {
     name: "Login",
@@ -79,39 +80,23 @@ export default {
             loginError: null,
         };
     },
+    mounted: function () {
+        // Get the message from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+
+        // Decode the message
+        if (message) this.loginError = decode(message);
+
+    },
     methods: {
         async performLogin() {
-
+            // Get the username and password
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            if (!username || !password) return;
-
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username,
-                    password,
-                }),
-            });
-
-            if (response.status === 200) {
-                const data = await response.json();
-
-                const jwtData = VueJwtDecode.decode(data.token);
-
-                store.commit("setUser", jwtData.user);
-                store.commit("setToken", data.token);
-
-
-                this.$router.push("/");
-            } else {
-                const data = await response.json();
-                this.loginError = data.message;
-            }
+            // Set error message if login fails
+            this.loginError = await store.dispatch("login", { username, password })
         },
     }
 };
