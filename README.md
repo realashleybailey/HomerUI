@@ -61,7 +61,7 @@ This is a fork of <a href="https://github.com/bastienwirtz/homer">Homer</a> by <
 - Live Statistics
 - Dark Mode
 - Authentication
-- and more...
+and more...
 
 ## Getting started
 
