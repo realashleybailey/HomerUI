@@ -1,8 +1,9 @@
 export type Links = Link[];
 
 export interface Link {
-    name:   string;
-    url:    string;
-    icon:   string;
-    target: string;
+    id:      number;
+    name:    string;
+    icon:    string;
+    url:     string;
+    target:  string;
 }

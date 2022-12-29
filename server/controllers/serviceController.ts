@@ -102,7 +102,7 @@ const postService = async (req: Request, res: Response) => {
     if (errors.length > 0) return respondError(res, errors);
 
     // Insert the service into the database
-    const { err, result } = await writeDatabase(db, 'INSERT INTO services (user_id, group_id, name, subtitle, appid, icon, url, endpoint, license, description, enhanced, type, tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [userId, service.groupId, service.name, service.subtitle, service.appid, service.icon, service.url, service.endpoint, service.license, service.description, service.enhanced, service.type, service.tag]);
+    const { err, result } = await writeDatabase(db, 'INSERT INTO services (user_id, group_id, name, subtitle, appid, icon, logo, url, endpoint, license, description, enhanced, type, tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [userId, serviceValidate.groupId, serviceValidate.name, serviceValidate.subtitle, serviceValidate.appid, serviceValidate.icon, serviceValidate.logo, serviceValidate.url, serviceValidate.endpoint, serviceValidate.license, serviceValidate.description, serviceValidate.enhanced, serviceValidate.type, serviceValidate.tag]);
 
     // If there is an error, return an error
     if (err) return respondError(res, err);

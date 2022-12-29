@@ -54,7 +54,7 @@
     margin-left: -12px;
     color: #030005;
     text-transform: uppercase;
-    text-shadow: -1px -1px 0 #8400ff, 1px 1px 0 #ff005a;
+    text-shadow: -1px -1px 0 var(--highlight-primary), 1px 1px 0 var(--highlight-secondary);
     letter-spacing: -20px
 }
 
@@ -68,7 +68,7 @@
     font-weight: 700;
     color: #fff;
     text-transform: uppercase;
-    text-shadow: 0 2px 0 #8400ff;
+    text-shadow: 0 2px 0 var(--highlight-primary);
     letter-spacing: 13px;
     margin: 0
 }

@@ -59,17 +59,24 @@
                 <div class="mt-4">
 
                     <div class="columns has-text-light-dark is-multiline">
+
                         <div class="column is-half">
                             <div class="field">
                                 <label class="label has-text-light-dark">Service Name *</label>
-                                <div class="control">
-                                    <input class="input" type="text" v-model="form.name">
+                                <div class="control has-icons-right">
+                                    <input class="input" type="text" v-model="form.name" :class="[v$.form.name.$error ? 'is-danger' : '']">
+                                    <span class="icon is-small is-right" v-if="v$.form.name.$error">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </span>
                                 </div>
+                                <p v-for="error in v$.form.name.$errors" :key="error.$uid" class="help is-danger">{{ error.$message }}</p>
                             </div>
                         </div>
+
+
                         <div class="column is-half">
                             <label class="label has-text-light-dark">Service URL *</label>
-                            <div class="field has-addons">
+                            <div class="field has-addons mb-0">
                                 <div class="control">
                                     <div class="select">
                                         <select v-model="form.protocol">
@@ -78,17 +85,25 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="control" style="width: 100%;">
-                                    <input class="input" type="text" v-model="form.url">
+                                <div class="control has-icons-right" style="width: 100%;">
+                                    <input class="input" type="text" v-model="form.url" :class="[v$.form.url.$error ? 'is-danger' : '']">
+                                    <span class="icon is-small is-right" v-if="v$.form.url.$error">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </span>
                                 </div>
                             </div>
+                            <p v-for="error in v$.form.url.$errors" :key="error.$uid" class="help is-danger">{{ error.$message }}</p>
                         </div>
+
 
                         <div class="column is-half">
                             <div class="field">
                                 <label class="label has-text-light-dark">Service Icon</label>
-                                <div class="control">
-                                    <input class="input" type="text" v-model="form.icon">
+                                <div class="control has-icons-left">
+                                    <span class="icon is-small is-left">
+                                        <img :src="`/assets/tools/${form.logo}`" onerror="this.src = '/assets/tools/homer.png';" style="width: 20px; height: 20px;">
+                                    </span>
+                                    <input class="input" type="text" v-model="form.logo">
                                 </div>
                             </div>
                         </div>
@@ -98,7 +113,7 @@
                                 <label class="label has-text-light-dark">Service Group *</label>
                                 <div class="control">
                                     <div class="select" style="width: 100%;">
-                                        <select style="width: 100%;" v-model="form.group">
+                                        <select style="width: 100%;" v-model="form.groupId">
                                             <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
                                         </select>
                                     </div>
@@ -113,7 +128,7 @@
                         </div>
                         <div class="pb-4 is-flex is-justify-content-end	">
                             <div class="field">
-                                <input id="toggleAPI" name="toggleAPI" type="checkbox" class="switch is-rounded is-info">
+                                <input id="toggleAPI" name="toggleAPI" type="checkbox" class="switch is-rounded is-info" v-model="form.enhanced">
                                 <label for="toggleAPI" class="label has-text-light-dark"></label>
                             </div>
                         </div>
@@ -122,8 +137,9 @@
                                 <div class="field">
                                     <label class="label has-text-light-dark">{{ field.header }} {{ field.required ? '*' : '' }}</label>
                                     <div class="control">
-                                        <input class="input" type="text" v-model="form[field.name]" :placeholder="field.placeholder">
+                                        <input class="input" type="text" v-model="form[field.name]" :placeholder="field.placeholder" :class="[v$.form[field.name].$error ? 'is-danger' : '']">
                                     </div>
+                                    <p v-for="error in v$.form[field.name].$errors" :key="error.$uid" class="help is-danger">{{ error.$message }}</p>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +147,7 @@
 
                     <div class="buttons is-right">
                         <button v-if="fields" class="button is-link is-warning" @click="testAPI()">Test API</button>
-                        <button class="button is-link" style="background-color: var(--highlight-secondary)">Add Service</button>
+                        <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="addService()">Add Service</button>
                     </div>
                 </div>
             </div>
@@ -151,26 +167,6 @@
 
 .multiselect-search {
     color: white;
-}
-
-.is-dark {
-    .has-text-light-dark {
-        color: hsl(0, 0%, 96%);
-    }
-
-    .multiselect-search {
-        caret-color: hsl(0, 0%, 96%);
-    }
-}
-
-.is-light {
-    .has-text-light-dark {
-        color: hsl(0, 0%, 21%)
-    }
-
-    .multiselect-search {
-        caret-color: hsl(0, 0%, 21%);
-    }
 }
 
 .is-icon {
@@ -277,24 +273,92 @@
     box-shadow: 0 2px 15px 0 var(--card-shadow);
 }
 
+.is-danger.textarea,
+.is-danger.input,
+.is-danger.field {
+    border-color: hsl(348deg, 86%, 61%) !important;
+}
+
 /* .multiselect-single-label {
     color: #555d67;
 } */
 </style>
 <script>
 import { store } from '../store';
+
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength, helpers, requiredIf } from '@vuelidate/validators'
+import { useToast } from "vue-toastification";
 import Multiselect from '@vueform/multiselect';
+
+const isURL = helpers.withMessage('Must be a valid URL', helpers.withParams(
+    { type: 'url' },
+    (value) => {
+        if (!value) return true;
+        return /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(value);
+    }))
 
 export default {
     name: 'App',
     components: { Multiselect },
     data() {
         return {
+            toast: useToast(),
+            v$: useVuelidate(),
             value: null,
             fields: null,
-            form: [],
+
+            form: {
+                groupId: null,
+                name: null,
+                icon: null,
+                url: null,
+            },
 
             serviceImgHeight: 0,
+        }
+    },
+    validations() {
+        return {
+            form: {
+                groupId: {
+                    required,
+                    minLength: minLength(1),
+                },
+                name: {
+                    required,
+                    minLength: minLength(10),
+                },
+                logo: {
+                    required,
+                    minLength: minLength(10),
+                },
+                url: {
+                    required,
+                    isURL: isURL
+                },
+
+                username: {
+                    required: requiredIf(function () {
+                        return this.form.enhanced && !!this.fields.find(field => field.name === 'username')
+                    }),
+                },
+
+                password: {
+                    required: requiredIf(function () {
+                        return this.form.enhanced && !!this.fields.find(field => field.name === 'password')
+                    }),
+                },
+
+                endpoint: {
+                    isURL: helpers.withMessage('Must be a valid URL', helpers.withParams(
+                        { type: 'url' },
+                        (value) => {
+                            if (!value || !this.form.enhanced) return true;
+                            return /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(value);
+                        }))
+                },
+            }
         }
     },
     computed: {
@@ -316,8 +380,8 @@ export default {
             return store.getters.groups;
         }
     },
-    async created() {
-
+    async mounted() {
+        window.testing = this;
     },
     watch: {
         value: function (value) {
@@ -328,8 +392,8 @@ export default {
 
             this.form.name = value.name;
             this.form.protocol = "https://"
-            this.form.icon = value.icon;
-            this.form.group = 1;
+            this.form.logo = value.icon;
+            this.form.groupId = 1;
         },
         form: function (value) {
             console.log(value);
@@ -362,6 +426,33 @@ export default {
             }
 
             alert('Success!');
+        },
+        addService() {
+
+            this.v$.$validate();
+
+            if (this.v$.$error) {
+                this.toast.error('Please fill out all required fields correctly');
+                return;
+            };
+
+            let service = {
+                groupId: this.form.groupId,
+                name: this.form.name,
+                subtitle: 'This is a test',
+                appid: this.value.appid,
+                icon: '',
+                logo: this.form.logo,
+                url: this.form.protocol + this.form.url,
+                endpoint: this.form.endpoint || this.form.protocol + this.form.url,
+                license: this.value.license,
+                description: this.value.description,
+                enhanced: this.form.enhanced || false,
+                type: this.form.type || 'Custom',
+                tag: this.form.tag || this.form.name
+            }
+
+            store.dispatch('createService', service);
         },
         customLabel({ title }) {
             return `${title}`

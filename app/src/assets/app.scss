@@ -22,14 +22,74 @@
   text-overflow: ellipsis;
 }
 
-// * {
-//   transition: .2s all;
-//   -webkit-transition: .2s all;
-// }
+
+.is-highlight-primary {
+  color: var(--highlight-primary);
+}
+
+.is-highlight-secondary {
+  color: var(--highlight-secondary);
+}
+
+.is-highlight-hover {
+  color: var(--highlight-hover);
+}
+
+.is-background {
+  color: var(--background);
+}
+
+.is-card-background {
+  color: var(--card-background);
+}
+
+.has-highlight-primary {
+  background-color: var(--highlight-primary);
+}
+
+.has-highlight-secondary {
+  background-color: var(--highlight-secondary);
+}
+
+.has-highlight-hover {
+  background-color: var(--highlight-hover);
+}
+
+.has-background {
+  background-color: var(--background);
+}
+
+.has-card-background {
+  background-color: var(--card-background);
+}
+
+
+
 .container {
   transition: .2s max-width;
   -webkit-transition: .2s max-width;
 }
+
+.is-dark {
+  .has-text-light-dark {
+    color: hsl(0, 0%, 96%);
+  }
+
+  .multiselect-search {
+    caret-color: hsl(0, 0%, 96%);
+  }
+}
+
+.is-light {
+  .has-text-light-dark {
+    color: hsl(0, 0%, 21%)
+  }
+
+  .multiselect-search {
+    caret-color: hsl(0, 0%, 21%);
+  }
+}
+
 
 body #app.is-dark {
 

@@ -13,19 +13,9 @@ import "vue-toastification/dist/index.css";
 
 import "@fortawesome/fontawesome-free/css/all.css";
 import "./assets/app.scss";
+import 'animate.css';
 
 const app = createApp(App);
-
-window.onerror = function (message, source, lineno, colno, error) {
-  console.log("Error: " + message + " in " + source + " at line " + lineno + " column " + colno);
-  console.log(error);
-};
-
-app.config.errorHandler = function (err, vm, info) {
-  console.log(err);
-  console.log(vm);
-  console.log(info);
-}
 
 app.use(new VueSocketIO({
   debug: false,
@@ -38,10 +28,13 @@ app.use(new VueSocketIO({
   options: { path: "/ws" }
 }))
 
+
 app.use(store)
 app.use(router)
 app.use(Toast, {
   position: (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? "top-center" : "bottom-right",
+  pauseOnHover: false,
+  pauseOnFocusLoss: false,
 })
 
 store.dispatch("checkToken", store.getters.token);

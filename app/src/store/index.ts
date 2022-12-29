@@ -10,6 +10,8 @@ import { store as services, ServicesStore, State as ServicesState } from './modu
 import { store as authentication, AuthenticationStore, State as AuthenticationState } from './modules/authentication'
 import { store as settings, SettingsStore, State as SettingsState } from './modules/settings'
 import { store as groups, GroupsStore, State as GroupsState } from './modules/groups'
+import { store as links, LinksStore, State as LinksState } from './modules/links'
+import { store as messages, MessagesStore, State as MessagesState } from './modules/messages'
 import { store as queue, QueueStore, State as QueueState } from './modules/queue'
 
 export type RootState = {
@@ -17,6 +19,8 @@ export type RootState = {
     authentication: AuthenticationState,
     settings: SettingsState,
     groups: GroupsState,
+    links: LinksState,
+    messages: MessagesState,
     queue: QueueState,
 };
 
@@ -24,6 +28,8 @@ export type Store = ServicesStore<Pick<RootState, 'services'>>
                     & AuthenticationStore<Pick<RootState, 'authentication'>>
                     & SettingsStore<Pick<RootState, 'settings'>>
                     & GroupsStore<Pick<RootState, 'groups'>>
+                    & LinksStore<Pick<RootState, 'links'>>
+                    & MessagesStore<Pick<RootState, 'messages'>>
                     & QueueStore<Pick<RootState, 'queue'>>;
 
 const debug = process.env.NODE_ENV !== 'production';
@@ -577,6 +583,8 @@ export const store = createStore({
         authentication,
         settings,
         groups,
+        links,
+        messages,
         queue,
     }
 })

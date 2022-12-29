@@ -12,13 +12,18 @@
 
     <Footer :footer="footer" :footerDisabled="footerDisabled" />
 
+    <OnBoard :isShown="configurationNeeded" />
+
   </div>
 </template>
+
 
 <script>
 
 import { store } from './store/';
 import QueueController from './components/QueueController.vue';
+
+import OnBoard from './onboard/Index.vue';
 
 import Header from "./components/Header.vue";
 import Navbar from "./components/Navbar.vue";
@@ -35,6 +40,7 @@ import DynamicTheme from "./components/DynamicTheme.vue";
 export default {
   name: "App",
   components: {
+    OnBoard,
     Header,
     Navbar,
     Footer,
@@ -59,7 +65,7 @@ export default {
   },
   computed: {
     configurationNeeded: function () {
-      return (this.loaded && !this.services) || this.configNotFound;
+      return store.getters.configurationNeeded;
     },
     links: function () {
       return store.getters.links;
@@ -92,6 +98,7 @@ export default {
       return !!store.getters.footerDisabled;
     },
     isDark: function () {
+      if (this.configurationNeeded) return window.matchMedia('(prefers-color-scheme: dark)').matches;
       return store.getters.isDark;
     },
   },
@@ -103,6 +110,8 @@ export default {
     store.dispatch("getSettings");
     store.dispatch("getServices");
     store.dispatch("getGroups");
+    store.dispatch("getLinks");
+    store.dispatch("getMessages");
     store.dispatch("getSupportedApps");
     // store.dispatch("loadServices");
     // store.dispatch("loadGroups");

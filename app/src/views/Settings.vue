@@ -60,20 +60,20 @@
                     </h2>
 
                     <!-- Message Title Input -->
-                    <div class="field">
+                    <!-- <div class="field">
                         <label class="label">Message Title</label>
                         <div class="control">
                             <input class="input" type="text" v-model="messageObject.title" :placeholder="message.title" @dblclick="messageObject.title = message.title">
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Message HTML Input -->
-                    <div class="field">
+                    <!-- <div class="field">
                         <label class="label">Message HTML</label>
                         <div class="control">
                             <textarea class="textarea" type="text" v-model="messageObject.content" :placeholder="message.content" @dblclick="messageObject.content = message.content"></textarea>
                         </div>
-                    </div>
+                    </div> -->
 
 
                     <div class="columns">
@@ -197,123 +197,6 @@
                     Save Settings
                 </button>
             </div>
-
-
-            <!-- <div v-if="addLink" id="modal-link" class="modal" :class="{ 'is-active': addLink }">
-
-                <div class="modal-background" @click="addLinkToggle()"></div>
-
-                <div class="modal-card">
-
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Add Link</p>
-                        <button class="delete" aria-label="close" @click="addLinkToggle()"></button>
-                    </header>
-
-                    <section class="modal-card-body">
-                        <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                                <input v-model="addLink.name" class="input" type="text" placeholder="Name">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-font"></i>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="field">
-                            <p class="control has-icons-left">
-                                <input v-model="addLink.url" class="input" type="text" placeholder="URL">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-link"></i>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                                <input v-model="addLink.icon" class="input" type="text" placeholder="Font Awesome Icon">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-icons"></i>
-                                </span>
-                                <span class="icon is-small is-right">
-                                    <i class="fas" :class="[addLink.icon]"></i>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="field">
-                            <div class="select">
-                                <select v-model="addLink.target">
-                                    <option value="_self">Open in same tab
-                                    </option>
-                                    <option value="_blank">Open in new tab
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="buttons is-right">
-                            <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushAddedLink()">Add Link</button>
-                        </div>
-                    </section>
-
-                </div>
-            </div>
-
-
-
-            <div v-if="editLink" id="modal-link" class="modal" :class="{ 'is-active': editLink }">
-
-                <div class="modal-background" @click="editLinkToggle()"></div>
-
-                <div class="modal-card">
-
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Edit Link</p>
-                        <button class="delete" aria-label="close" @click="editLinkToggle()"></button>
-                    </header>
-
-                    <section class="modal-card-body">
-                        <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                                <input v-model="editLink.name" class="input" type="text" placeholder="Name">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-font"></i>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="field">
-                            <p class="control has-icons-left">
-                                <input v-model="editLink.url" class="input" type="text" placeholder="URL">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-link"></i>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                                <input v-model="editLink.icon" class="input" type="text" placeholder="Font Awesome Icon">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-icons"></i>
-                                </span>
-                                <span class="icon is-small is-right">
-                                    <i class="fas" :class="[editLink.icon]"></i>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="field">
-                            <div class="select">
-                                <select v-model="editLink.target">
-                                    <option value="_self">Open in same tab
-                                    </option>
-                                    <option value="_blank">Open in new tab
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="buttons is-right">
-                            <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushEditedLink()">Edit Link</button>
-                        </div>
-                    </section>
-
-                </div>
-            </div> -->
 
         </div>
         <div class="container p-5 settings" v-if="!hideMain">

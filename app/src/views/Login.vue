@@ -3,31 +3,31 @@
         <div class="login card">
             <div class="card-content" style="height: auto;">
                 <div class="content">
-                    <!-- <form> -->
-                    <p class="title">
-                        Login
-                    </p>
-                    <div class="field">
-                        <p class="control has-icons-left has-icons-right">
-                            <input id="username" class="input" type="username" placeholder="Username">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-user"></i>
-                            </span>
+                    <form @submit.prevent>
+                        <p class="title">
+                            Login
                         </p>
-                    </div>
-                    <div class="field">
-                        <p class="control has-icons-left">
-                            <input id="password" class="input" type="password" placeholder="Password">
-                            <span class="icon is-small is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
-                        </p>
-                    </div>
-                    <span v-if="loginError" class="help is-danger">{{ loginError }}</span>
-                    <div class="buttons is-right">
-                        <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="performLogin()">Login</button>
-                    </div>
-                    <!-- </form> -->
+                        <div class="field">
+                            <p class="control has-icons-left has-icons-right">
+                                <input id="username" class="input" type="username" placeholder="Username" autocomplete="username">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control has-icons-left">
+                                <input id="password" class="input" type="password" placeholder="Password" autocomplete="current-password">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                            </p>
+                        </div>
+                        <span v-if="loginError" class="help is-danger">{{ loginError }}</span>
+                        <div class="buttons is-right">
+                            <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="performLogin()">Login</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

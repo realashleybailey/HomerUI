@@ -21,6 +21,8 @@ import { getServices, getService, postService, putService, deleteService } from 
 import { getGroups, getGroup, postGroup, putGroup, deleteGroup } from "../controllers/groupController";
 import { getLinks, getLink, postLink, putLink, deleteLink } from "../controllers/linkController";
 
+import { getStatus } from "../controllers/statusController";
+import { deleteMessage, getMessage, getMessages, postMessage, putMessage } from "../controllers/messageController";
 
 const router = express.Router();
 
@@ -161,7 +163,7 @@ router.delete("/group/:id", jwtVerify, deleteGroup
 // Link Routes //
 /////////////////
 
-router.get("/link", jwtVerify, getLinks
+router.get("/link", getLinks
 // #swagger.tags = ['Link']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of links', schema: { $ref: "#/definitions/LinksResponse" } }
@@ -211,6 +213,60 @@ router.delete("/link/:id", jwtVerify, deleteLink
 // #swagger.responses[404] = { description: 'Link not found' }
 );
 
+////////////////////
+// Message Routes //
+////////////////////
+
+router.get("/message", jwtVerify, getMessages
+// #swagger.tags = ['Message']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.responses[200] = { description: 'List of messages', schema: { $ref: "#/definitions/MessagesResponse" } }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
+);
+
+router.get("/message/:id", jwtVerify, getMessage
+// #swagger.tags = ['Message']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.responses[200] = { description: 'Message', schema: { $ref: "#/definitions/Message" } }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
+// #swagger.responses[404] = { description: 'Message not found' }
+);
+
+router.post("/message", jwtVerify, postMessage
+// #swagger.tags = ['Message']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/definitions/Message" }}}}
+// #swagger.responses[200] = { description: 'Message created', schema: { $ref: "#/definitions/MessageResponse" } }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
+);
+
+router.put("/message/:id", jwtVerify, putMessage
+// #swagger.tags = ['Message']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/definitions/Message" }}}}
+// #swagger.responses[200] = { description: 'Message updated', schema: { $ref: "#/definitions/MessageResponse" } }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
+// #swagger.responses[404] = { description: 'Message not found' }
+);
+
+router.delete("/message/:id", jwtVerify, deleteMessage
+// #swagger.tags = ['Message']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.responses[200] = { description: 'Message deleted' }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
+// #swagger.responses[404] = { description: 'Message not found' }
+);
+
 
 // Create api route for the login endpoint
 router.post("/login", login);
@@ -236,6 +292,9 @@ router.get("/groups", services.getGroups);
 
 // Create api route for listing groups
 
+// Status
+router.get("/status", getStatus);
+
 // Serve json file for services
 router.get("/supportedapps", (req, res) => {
     res.sendFile("SupportedAppsList.json", { root: join(__dirname, "../supportedapps/") });
@@ -252,6 +311,11 @@ router.get("/supportedapps/config/:appname", (req, res) => {
 
     // Send file
     res.sendFile('config.json', { root: path });
+});
+
+// Catch all other routes
+router.get("*", (req, res) => {
+    res.status(404).json({ error: "Not found" });
 });
 
 // Create api route for getting stats

@@ -34,8 +34,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
         if (settings.subtitle) commit('setSubtitle', settings.subtitle)
         if (settings.logo) commit('setLogo', settings.logo)
         if (settings.headerDisabled) commit('setHeaderDisabled', !!settings.headerDisabled)
-        if (settings.message) commit('setMessage', settings.message)
-        if (settings.links) commit('setLinks', settings.links)
         if (settings.footer) commit('setFooter', settings.footer)
         if (settings.footerDisabled) commit('setFooterDisabled', !!settings.footerDisabled)
     },

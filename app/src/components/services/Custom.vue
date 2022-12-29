@@ -10,7 +10,7 @@
                             <slot name="icon">
                                 <div v-if="item.logo" style="display: flex; align-items: center;">
                                     <figure class="image is-48x48">
-                                        <img :src="item.logo" :alt="`${item.name} logo`" />
+                                        <img :src="logo()" :alt="`${item.name} logo`" />
                                     </figure>
                                 </div>
                                 <div v-if="item.icon" style="display: flex; align-items: center;">
@@ -61,8 +61,7 @@ export default {
         };
     },
     mounted() {
-        // this.queueJob();
-
+        if (!this.item.enhanced) return;
         this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
 
         this.interval = setInterval(() => {
@@ -86,7 +85,12 @@ export default {
                     }.bind(this), 3000);
                 }.bind(this)
             });
-        }
+        },
+        logo: function () {
+            if (this.item.logo && this.item.logo.startsWith("http")) return this.item.logo;
+            if (this.item.logo) return `/assets/tools/${this.item.logo}`;
+            return '/assets/tools/homer.png';
+        },
     },
     beforeUnmount() {
         clearInterval(this.interval);

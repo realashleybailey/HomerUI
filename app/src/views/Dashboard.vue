@@ -6,7 +6,7 @@
             <div v-if="!offline">
 
                 <!-- Optional messages -->
-                <Message :item="message" />
+                <Message v-for="message in messages" :key="message.id" :item="message" />
 
                 <!-- Get Started Message -->
                 <GetStarted v-if="configurationNeeded" />
@@ -90,8 +90,8 @@ export default {
         connectivityChecker: function () {
             return store.getters.connectivityChecker;
         },
-        message: function () {
-            return store.getters.message;
+        messages: function () {
+            return store.getters.messages;
         },
         vLayout: function () {
             return store.getters.vLayout;

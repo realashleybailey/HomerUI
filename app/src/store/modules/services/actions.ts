@@ -42,7 +42,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     },
     async getService({ commit, rootState }, id) {
         // Get the service from the API using token authentication
-        const response = await fetch(`/api/services/${id}`, {
+        const response = await fetch(`/api/service/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + rootState.authentication.token || '',
@@ -65,13 +65,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
     },
     async createService({ commit, rootState }, service) {
         // Create the service in the API using token authentication
-        const response = await fetch('/api/createservice', {
+        const response = await fetch('/api/service', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + rootState.authentication.token || '',
             },
-            body: service as any
+            body: JSON.stringify(service)
         })
 
         // If the response is not ok, throw an error
