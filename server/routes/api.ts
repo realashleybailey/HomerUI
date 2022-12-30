@@ -20,6 +20,7 @@ import { getLogin, getLogout } from "../controllers/authenticationController";
 import { getServices, getService, postService, putService, deleteService } from "../controllers/serviceController";
 import { getGroups, getGroup, postGroup, putGroup, deleteGroup } from "../controllers/groupController";
 import { getLinks, getLink, postLink, putLink, deleteLink } from "../controllers/linkController";
+import { getPositions, postPositions } from "../controllers/positionController";
 
 import { getStatus } from "../controllers/statusController";
 import { deleteMessage, getMessage, getMessages, postMessage, putMessage } from "../controllers/messageController";
@@ -265,6 +266,29 @@ router.delete("/message/:id", jwtVerify, deleteMessage
 // #swagger.responses[500] = { description: 'Internal server error' }
 // #swagger.responses[400] = { description: 'Bad request' }
 // #swagger.responses[404] = { description: 'Message not found' }
+);
+
+/////////////////////
+// Position Routes //
+/////////////////////
+
+router.get("/position", getPositions
+// #swagger.tags = ['Position']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.responses[200] = { description: 'List of positions', schema: { $ref: "#/definitions/PositionsResponse" } }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
+);
+
+router.post("/position", postPositions
+// #swagger.tags = ['Position']
+// #swagger.security = [{ "bearerAuth": [] }]
+// #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/definitions/Position" }}}}
+// #swagger.responses[200] = { description: 'Position created', schema: { $ref: "#/definitions/PositionResponse" } }
+// #swagger.responses[401] = { description: 'Unauthorized' }
+// #swagger.responses[500] = { description: 'Internal server error' }
+// #swagger.responses[400] = { description: 'Bad request' }
 );
 
 

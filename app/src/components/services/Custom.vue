@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="card" :style="`background-color:${item.background};`" :class="item.class">
-            <a :href="item.url" :target="item.target" rel="noreferrer">
+            <component :is="enabled ? 'a' : 'div'" :href="enabled ? item.url : ''" :target="item.target" rel="noreferrer">
                 <div class="card-content p-0 pl-4" style="display: flex; align-items: center;">
 
                     <div class="columns is-mobile" :style="[item.tag ? 'margin-bottom: -15px;' : '']">
@@ -39,7 +39,7 @@
                         <strong class="tag-text">#{{ item.tag }}</strong>
                     </div>
                 </div>
-            </a>
+            </component>
         </div>
     </div>
 </template>
@@ -52,6 +52,11 @@ export default {
     mixins: [service],
     props: {
         item: Object,
+        live: Boolean,
+        enabled: {
+            type: Boolean,
+            default: true,
+        }
     },
     data: () => {
         return {
@@ -61,29 +66,29 @@ export default {
         };
     },
     mounted() {
-        if (!this.item.enhanced) return;
-        this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
-
-        this.interval = setInterval(() => {
-            this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
-        }, 5000);
-
-        this.sockets.subscribe(`service-${this.item.id}`, (data) => {
-            if (data.html) this.livestats = data.html;
-        });
+        if (this.live) this.queueJob();
+    },
+    watch: {
+        live: function (val) {
+            if (val) {
+                this.queueJob();
+            } else {
+                clearInterval(this.interval);
+                this.livestats = null;
+            }
+        },
     },
     methods: {
         queueJob() {
-            this.$store.dispatch('queue/addJob', {
-                id: this.item.id,
-                handler: function () {
-                    setTimeout(function () {
-                        // this.interval = setInterval(() => {
-                        this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
-                        // }, 5000);
-                        this.$store.dispatch('queue/startNextJob');
-                    }.bind(this), 3000);
-                }.bind(this)
+            if (!this.item.enhanced) return;
+            this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
+
+            this.interval = setInterval(() => {
+                this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
+            }, 5000);
+
+            this.sockets.subscribe(`service-${this.item.id}`, (data) => {
+                if (data.html) this.livestats = data.html;
             });
         },
         logo: function () {

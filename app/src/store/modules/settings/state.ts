@@ -19,7 +19,8 @@ export type State = {
     vLayout: boolean,
     isDark: boolean,
     colorTheme: number,
-    colors: Colors
+    colors: Colors,
+    liveStatsDisabled: boolean,
 }
 
 export const state: State = {
@@ -69,6 +70,7 @@ export const state: State = {
             "link": "#3273dc",
             "link-hover": "#ffdd57",
             "background-image": ""
-        }
+        },
     },
+    liveStatsDisabled: true,
 }

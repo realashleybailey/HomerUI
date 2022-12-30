@@ -17,7 +17,7 @@ const getGroups = async (req: Request, res: Response) => {
     const userId = (req as any).user ? (req as any).user.id : 1;
 
     // Get all the groups from the database where the user id is the user id
-    const { err, row: groups } = await getAllDatabase(db, 'SELECT * FROM groups WHERE user_id = ?', [userId]);
+    const { err, row: groups } = await getAllDatabase(db, 'SELECT * FROM groups WHERE user_id = ? ORDER BY position', [userId]);
 
     // If there is an error, return an error or if the groups do not exist, return an empty null
     if (err) return respondError(res, err);

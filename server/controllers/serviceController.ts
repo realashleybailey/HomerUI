@@ -17,7 +17,7 @@ const getServices = async (req: Request, res: Response) => {
     const userId = (req as any).user ? (req as any).user.id : 1;
 
     // Get all the services from the database where the user id is the user id
-    const { err, row: services } = await getAllDatabase(db, 'SELECT * FROM services WHERE user_id = ?', [userId]);
+    const { err, row: services } = await getAllDatabase(db, 'SELECT * FROM services WHERE user_id = ? ORDER BY position', [userId]);
 
     // If there is an error, return an error or if the services do not exist, return an empty null
     if (err) return respondError(res, err);

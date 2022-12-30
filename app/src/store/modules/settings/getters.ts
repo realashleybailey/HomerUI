@@ -20,6 +20,7 @@ export type Getters = {
     isDark(state: State): boolean;
     colorTheme(state: State): number;
     colors(state: State): Colors;
+    liveStatsDisabled(state: State): boolean;
 };
 
 export const getters: GetterTree<State, RootState> & Getters = {
@@ -37,4 +38,5 @@ export const getters: GetterTree<State, RootState> & Getters = {
     isDark: (state) => state.isDark,
     colorTheme: (state) => state.colorTheme,
     colors: (state) => state.colors,
+    liveStatsDisabled: (state) => state.liveStatsDisabled,
 };

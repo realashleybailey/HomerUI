@@ -106,6 +106,7 @@ export default {
     this.loaded = true;
     window.that = this;
     window.store = store;
+
     // Load settings from api
     store.dispatch("getSettings");
     store.dispatch("getServices");
@@ -113,9 +114,6 @@ export default {
     store.dispatch("getLinks");
     store.dispatch("getMessages");
     store.dispatch("getSupportedApps");
-    // store.dispatch("loadServices");
-    // store.dispatch("loadGroups");
-    // store.dispatch("loadSupportedApps");
   },
   methods: {
     searchHotkey() {

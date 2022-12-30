@@ -2,7 +2,7 @@
     <section class="section">
         <div class="container">
 
-            <Multiselect v-model="value" :searchable="true" placeholder="Select or Search for service" label="name" :options="supportedApps" @clear="clearValue()">
+            <Multiselect v-model="value" :searchable="true" placeholder="Select or Search for service" label="name" :groups="true" :options="supportedApps" @clear="clearValue()">
                 <template v-slot:singlelabel="{ value }">
                     <div class="multiselect-single-label">
                         <img class="is-icon" :src="`/assets/tools/${value.icon}`" :onerror="`this.onerror=null; this.src='${logo}'`">
@@ -24,7 +24,7 @@
             </article>
 
             <div v-if="value" class="mt-5">
-                <div class="card has-text-light-dark" style="transform: none;">
+                <div class="card has-text-light-dark" style="transform: none;" v-if="value.type !== 'website'">
                     <div class="card-content" style="height: auto;">
                         <div class="columns">
 
@@ -184,7 +184,7 @@
 }
 
 .is-dark {
-    --ms-font-color: #fff;
+    --ms-font-color: var(--text);
     --ms-font-size: 1.3rem;
     --ms-line-height: 1.375;
     --ms-bg: var(--card-background);
@@ -200,6 +200,10 @@
     --ms-dropdown-border-color: var(--card-shadow);
     --ms-dropdown-border-width: 1px;
     --ms-dropdown-radius: 4px;
+
+    --ms-group-label-font-size: 1rem;
+    --ms-group-label-bg: var(--card-shadow);
+    --ms-group-label-color: var(--text);
 
     --ms-option-font-size: 1rem;
 
@@ -242,6 +246,10 @@
     --ms-dropdown-border-width: 1px;
     --ms-dropdown-radius: 4px;
 
+    --ms-group-label-font-size: 1rem;
+    --ms-group-label-bg: var(--card-shadow);
+    --ms-group-label-color: var(--text);
+
     --ms-option-font-size: 1rem;
 
     --ms-option-bg-pointed: var(--highlight-secondary);
@@ -283,6 +291,7 @@
     color: #555d67;
 } */
 </style>
+
 <script>
 import { store } from '../store';
 
@@ -327,11 +336,11 @@ export default {
                 },
                 name: {
                     required,
-                    minLength: minLength(10),
+                    minLength: minLength(1),
                 },
                 logo: {
                     required,
-                    minLength: minLength(10),
+                    minLength: minLength(1),
                 },
                 url: {
                     required,
@@ -366,15 +375,27 @@ export default {
             return store.getters.logo;
         },
         supportedApps: function () {
-            const apps = store.getters.supportedApps;
 
-            return apps.map(app => {
+            const apps = store.getters.supportedApps.map(app => {
                 return {
                     value: app,
                     name: app.name,
                     icon: app.icon,
                 }
             });
+
+            const others = [
+                {
+                    value: {
+                        icon: "web.png",
+                        type: "website",
+                    },
+                    name: "Website (Custom)",
+                    icon: "web.png",
+                }
+            ]
+
+            return [{ label: " Other Options", options: others }, { label: "Apps", options: apps }]
         },
         groups: function () {
             return store.getters.groups;
@@ -385,6 +406,7 @@ export default {
     },
     watch: {
         value: function (value) {
+            console.log(value);
             this.fields = null;
             this.form = [];
             if (value === null) return;
@@ -453,6 +475,9 @@ export default {
             }
 
             store.dispatch('createService', service);
+            store.dispatch("getServices");
+
+            this.clearValue();
         },
         customLabel({ title }) {
             return `${title}`

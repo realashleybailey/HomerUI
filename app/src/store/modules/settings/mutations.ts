@@ -21,6 +21,7 @@ export type Mutations<S = State> = {
     setColorTheme(state: S, colorTheme: number): void;
     setColors(state: S, colors: Colors): void;
     setSetting(state: S, payload: { name: string, value: any }): void;
+    setLiveStatsDisabled(state: S, liveStatsDisabled: boolean): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -68,5 +69,8 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     setSetting(state, payload: { name: string, value: any }) {
         state[payload.name] = payload.value;
+    },
+    setLiveStatsDisabled(state, liveStatsDisabled: boolean) {
+        state.liveStatsDisabled = liveStatsDisabled;
     }
 };

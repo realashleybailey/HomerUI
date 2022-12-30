@@ -35,4 +35,98 @@ export const actions: ActionTree<State, RootState> & Actions = {
         // Return the links
         return links;
     },
+    async getLink({ commit, state, rootState }, id) {
+        // Get link from the server
+        const response = await fetch(`/api/link/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + rootState.authentication.token
+            }
+        });
+
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error('Failed to get link');
+        }
+
+        // Get the link from the response
+        const link = await response.json();
+
+        // Commit the link to the state
+        commit('addLink', link);
+
+        // Return the link
+        return link;
+    },
+    async createLink({ commit, state, rootState }, link) {
+        // Create link on the server
+        const response = await fetch('/api/link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + rootState.authentication.token
+            },
+            body: JSON.stringify(link)
+        });
+
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error('Failed to create link');
+        }
+
+        // Get the link from the response
+        const createdLink = await response.json();
+
+        // Commit the link to the state
+        commit('addLink', createdLink);
+
+        // Return the link
+        return createdLink;
+    },
+    async updateLink({ commit, state, rootState }, link) {
+        // Update link on the server
+        const response = await fetch(`/api/link/${link.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + rootState.authentication.token
+            },
+            body: JSON.stringify(link)
+        });
+
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error('Failed to update link');
+        }
+
+        // Get the link from the response
+        const updatedLink = await response.json();
+
+        // Commit the link to the state
+        commit('updateLink', updatedLink);
+
+        // Return the link
+        return updatedLink;
+    },
+    async deleteLink({ commit, state, rootState }, id) {
+        // Delete link from the server
+        const response = await fetch(`/api/link/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + rootState.authentication.token
+            }
+        });
+
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error('Failed to delete link');
+        }
+
+        // Commit the link to the state
+        commit('deleteLink', id);
+
+        // Return the link
+        return id;
+    }
 };

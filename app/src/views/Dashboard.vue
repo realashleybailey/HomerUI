@@ -3,7 +3,7 @@
         <div v-cloak class="container">
             <ConnectivityChecker @network-status-update="offline = $event" />
 
-            <div v-if="!offline">
+            <template v-if="!offline">
 
                 <!-- Optional messages -->
                 <Message v-for="message in messages" :key="message.id" :item="message" />
@@ -11,44 +11,107 @@
                 <!-- Get Started Message -->
                 <GetStarted v-if="configurationNeeded" />
 
-                <!-- Horizontal layout -->
-                <div v-if="!vLayout || filter" class="columns is-multiline">
-                    <template v-for="(group, groupIndex) in dashboard">
-                        <h2 v-if="group.name" class="column is-full group-title" :key="`header-${groupIndex}`">
-                            <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
-                            <div v-else-if="group.logo" class="group-logo media-left">
-                                <figure class="image is-48x48">
-                                    <img :src="group.logo" :alt="`${group.name} logo`" />
-                                </figure>
-                            </div>
-                            {{ group.name }}
-                        </h2>
-                        <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :proxy="proxy" :class="['column', `is-${12 / columns}`]" />
-                    </template>
-                </div>
+                <!-- Edit Button -->
+                <ButtonBar v-if="isLoggedIn">
+                    <ToggleLiveView :liveStatsDisabled="liveStatsDisabled" @toggleLiveView="toggleLiveView" v-if="!editLayout" />
+                    <EditButton :toDelete="toDelete" :editLayout="editLayout" :dashboard="dashboard" @toggleEditLayout="toggleEditLayout" />
+                </ButtonBar>
 
-                <!-- Vertical layout -->
-                <div v-if="!filter && vLayout" class="columns is-multiline layout-vertical">
-                    <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in dashboard" :key="groupIndex">
-                        <h2 v-if="group.name" class="group-title">
-                            <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
-                            <div v-else-if="group.logo" class="group-logo media-left">
-                                <figure class="image is-48x48">
-                                    <img :src="group.logo" :alt="`${group.name} logo`" />
-                                </figure>
+
+                <!-- <transition name="fade" mode="in-out"> -->
+                <div v-if="editLayout">
+                    <div v-if="!vLayout || filter">
+                        <template v-for="(group, groupIndex) in dashboard">
+                            <div class="columns is-multiline">
+                                <h2 v-if="group.name" class="column is-full group-title" :key="`header-${groupIndex}`">
+                                    <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
+                                    <div v-else-if="group.logo" class="group-logo media-left">
+                                        <figure class="image is-48x48">
+                                            <img :src="group.logo" :alt="`${group.name} logo`" />
+                                        </figure>
+                                    </div>
+                                    {{ group.name }}
+                                </h2>
                             </div>
-                            {{ group.name }}
-                        </h2>
-                        <Service v-for="(item, index) in group.items" :key="index" :item="item" :proxy="proxy" :class="'service-vertical'" />
+                            <draggable v-model="group.items" group="first" @start="drag=true" @end="drag=false" item-key="id" class="columns is-multiline">
+                                <template #item="{element}">
+                                    <div :class="['column', `is-${12 / columns}`]">
+                                        <Service :item="element" typeOverride="Edit" @deleteService="deleteService" />
+                                    </div>
+                                </template>
+                            </draggable>
+                        </template>
+                    </div>
+
+
+                    <div v-if="!filter && vLayout" class="columns is-multiline layout-vertical">
+                        <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in dashboard" :key="groupIndex">
+                            <h2 v-if="group.name" class="group-title">
+                                <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
+                                <div v-else-if="group.logo" class="group-logo media-left">
+                                    <figure class="image is-48x48">
+                                        <img :src="group.logo" :alt="`${group.name} logo`" />
+                                    </figure>
+                                </div>
+                                {{ group.name }}
+                            </h2>
+                            <draggable v-model="group.items" group="first" @start="drag=true" @end="drag=false" item-key="id">
+                                <template #item="{element}">
+                                    <div class="service-vertical">
+                                        <Service :item="element" typeOverride="Edit" @deleteService="deleteService" />
+                                    </div>
+                                </template>
+                            </draggable>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <div v-else>
+                    <!-- Horizontal layout -->
+                    <div v-if="!vLayout || filter" class="columns is-multiline">
+                        <template v-for="(group, groupIndex) in dashboard">
+                            <h2 v-if="group.name" class="column is-full group-title" :key="`header-${groupIndex}`">
+                                <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
+                                <div v-else-if="group.logo" class="group-logo media-left">
+                                    <figure class="image is-48x48">
+                                        <img :src="group.logo" :alt="`${group.name} logo`" />
+                                    </figure>
+                                </div>
+                                {{ group.name }}
+                            </h2>
+                            <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :class="['column', `is-${12 / columns}`]" :live="!liveStatsDisabled" />
+                        </template>
+                    </div>
+
+                    <!-- Vertical layout -->
+                    <div v-if="!filter && vLayout" class="columns is-multiline layout-vertical">
+                        <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in dashboard" :key="groupIndex">
+                            <h2 v-if="group.name" class="group-title">
+                                <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
+                                <div v-else-if="group.logo" class="group-logo media-left">
+                                    <figure class="image is-48x48">
+                                        <img :src="group.logo" :alt="`${group.name} logo`" />
+                                    </figure>
+                                </div>
+                                {{ group.name }}
+                            </h2>
+                            <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :class="'service-vertical'" :live="!liveStatsDisabled" />
+                        </div>
+                    </div>
+                </div>
+                <!-- </transition> -->
+
+            </template>
         </div>
     </section>
 </template>
 
 <script>
 import { store } from "../store";
+
+import ButtonBar from "../components/ButtonBar.vue";
+import ToggleLiveView from "../components/ToggleLiveView.vue";
+import EditButton from "../components/EditButton.vue";
 import Navbar from "../components/Navbar.vue";
 import GetStarted from "../components/GetStarted.vue";
 import ConnectivityChecker from "../components/ConnectivityChecker.vue";
@@ -60,11 +123,14 @@ import UserAccount from "../components/UserAccount.vue";
 import DarkMode from "../components/DarkMode.vue";
 import DynamicTheme from "../components/DynamicTheme.vue";
 
-;
+import draggable from "vuedraggable";
 
 export default {
     name: "App",
     components: {
+        ButtonBar,
+        ToggleLiveView,
+        EditButton,
         Navbar,
         GetStarted,
         ConnectivityChecker,
@@ -75,12 +141,19 @@ export default {
         UserAccount,
         DarkMode,
         DynamicTheme,
+        draggable
     },
     data: function () {
         return {
             loaded: false,
             offline: false,
             filter: "",
+            editLayout: false,
+            enabled: true,
+            drag: false,
+            dashboard: null,
+            toDelete: [],
+            liveStatsDisabled: (store.getters.isLoggedIn) ? store.getters.liveStatsDisabled : false
         };
     },
     computed: {
@@ -102,9 +175,28 @@ export default {
         proxy: function () {
             return null;
         },
-        dashboard: function () {
+        isLoggedIn: function () {
+            return store.getters.isLoggedIn;
+        },
+    },
+    created: async function () {
+        this.loaded = true;
+    },
+    mounted: function () {
+        console.log("App mounted");
+        this.loadDashboard();
+    },
+    methods: {
+        logo: function (logo) {
+            if (logo && logo.startsWith("http")) return logo;
+            if (logo) return `/assets/tools/${logo}`;
+            return '/assets/tools/homer.png';
+        },
+        loadDashboard: function () {
             const groups = store.getters.groups;
             const services = store.getters.services;
+
+            console.log("loadDashboard", groups, services);
 
             // If there are no services, return an empty array
             if (!services || !services.length) {
@@ -120,13 +212,8 @@ export default {
                 group.items = services.filter((service) => service.group_id === group.id);
             });
 
-            return groups;
+            this.dashboard = groups;
         },
-    },
-    created: async function () {
-        this.loaded = true;
-    },
-    methods: {
         matchesFilter: function (item) {
             const needle = this.filter?.toLowerCase();
             return (
@@ -183,6 +270,22 @@ export default {
             let style = document.createElement("style");
             style.appendChild(document.createTextNode(css));
             document.head.appendChild(style);
+        },
+        deleteService: function ({ id, groupId }) {
+            // Remove service where id matches from store
+            this.toDelete.push(id);
+
+            // Remove service where id matches from group.items
+            const group = this.dashboard.find((group) => group.id === groupId);
+            group.items = group.items.filter((item) => item.id !== id);
+        },
+        toggleLiveView: function (value) {
+            this.liveStatsDisabled = value;
+        },
+        toggleEditLayout: function (value) {
+            if (!value) this.loadDashboard();
+            this.editLayout = value;
+            this.toDelete = [];
         },
     },
 };

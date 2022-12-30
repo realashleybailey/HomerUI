@@ -4,8 +4,7 @@
 
             <article class="message is-warning">
                 <div class="message-body">
-                    <b>Tip: </b>
-                    You can double click on any input to automatically fill it with the already configured value.
+                    <i><b>Tip: </b>You can double click on any input to automatically fill it with it's placeholder value.</i>
                 </div>
             </article>
 
@@ -51,67 +50,6 @@
                     </div>
                 </div>
 
-
-                <div class="column">
-
-                    <!-- Header Title -->
-                    <h2 class="group-title">
-                        Dashboard Message
-                    </h2>
-
-                    <!-- Message Title Input -->
-                    <!-- <div class="field">
-                        <label class="label">Message Title</label>
-                        <div class="control">
-                            <input class="input" type="text" v-model="messageObject.title" :placeholder="message.title" @dblclick="messageObject.title = message.title">
-                        </div>
-                    </div> -->
-
-                    <!-- Message HTML Input -->
-                    <!-- <div class="field">
-                        <label class="label">Message HTML</label>
-                        <div class="control">
-                            <textarea class="textarea" type="text" v-model="messageObject.content" :placeholder="message.content" @dblclick="messageObject.content = message.content"></textarea>
-                        </div>
-                    </div> -->
-
-
-                    <div class="columns">
-                        <div class="column">
-                            <!-- Message Color Input -->
-                            <div class="field">
-                                <label class="label">Message Color</label>
-                                <div class="control">
-                                    <div class="select w-100">
-                                        <select v-model="messageObject.style" class="w-100">
-                                            <option>is-dark</option>
-                                            <option>is-primary</option>
-                                            <option>is-link</option>
-                                            <option>is-info</option>
-                                            <option>is-success</option>
-                                            <option>is-warning</option>
-                                            <option>is-danger</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <!-- Message Disabled Checkbox -->
-                            <div class="field">
-                                <label class="label">Disable Message</label>
-                                <label class="checkbox large-checkbox">
-                                    <input type="checkbox" v-model="messageObject.disabled">
-                                    {{ messageObject.disabled ? 'Message Disabled' : 'Message Enabled' }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="columns">
                 <div class="column">
 
                     <!-- Footer Title -->
@@ -133,16 +71,16 @@
                             <tbody>
                                 <tr v-for="link in linksArray">
                                     <td style="vertical-align: middle; width: 1%">{{ link.name }}</td>
-                                    <td style="vertical-align: middle;">
-                                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                                    <td style="vertical-align: middle; max-width: 10vw;">
+                                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             [URL: {{ link.url }}]
-                                        </span>
+                                        </div>
                                     </td>
                                     <td style="display: flex; justify-content: end;">
-                                        <button class="button is-link is-small mr-2" @click="editLinkToggle(link)">
+                                        <button class="button is-link is-small mr-2" @click="editLinkToggle(link)" :disabled="!link.id">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="button is-danger is-small" @click="deleteLink(link)">
+                                        <button class="button is-danger is-small" @click="deleteLink(link.id)" :disabled="!link.id">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -156,6 +94,56 @@
                         </div>
                     </div>
 
+                </div>
+
+            </div>
+
+            <div class="columns">
+
+                <div class="column">
+
+                    <!-- Header Title -->
+                    <h2 class="group-title">
+                        Dashboard Messages
+                    </h2>
+
+                    <div class="field">
+
+                        <label class="label">Add Messages</label>
+
+                        <div class="message" v-if="linksArray.length === 0">
+                            <div class="message-body has-text-centered">
+                                No messages have been added yet.
+                            </div>
+                        </div>
+
+                        <table class="table is-fullwidth is-striped">
+                            <tbody>
+                                <tr v-for="message in messageArray">
+                                    <td style="vertical-align: middle; width: 1%">{{ message.title }}</td>
+                                    <td style="vertical-align: middle; max-width: 10vw;">
+                                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            {{ message.content }}
+                                        </div>
+                                    </td>
+
+                                    <td style="display: flex; justify-content: end;">
+                                        <button class="button is-link is-small mr-2" @click="editMessageToggle(message)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="button is-danger is-small" @click="deleteMessage(message)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="buttons is-right">
+                            <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="addMessageToggle(true)">
+                                Add Message
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -289,6 +277,114 @@
                     <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushEditedLink()">Edit Link</button>
                 </div>
             </template>
+            <template v-if="addMessage">
+
+                <!-- Message Title Input -->
+                <div class="field">
+                    <label class="label">Message Title</label>
+                    <div class="control">
+                        <input class="input" type="text" v-model="addMessage.title">
+                    </div>
+                </div>
+
+                <!-- Message HTML Input -->
+                <div class="field">
+                    <label class="label">Message HTML</label>
+                    <div class="control">
+                        <textarea class="textarea" type="text" v-model="addMessage.content"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Message Color</label>
+                            <div class="control">
+                                <div class="select w-100">
+                                    <select v-model="addMessage.style" class="w-100">
+                                        <option>is-dark</option>
+                                        <option>is-primary</option>
+                                        <option>is-link</option>
+                                        <option>is-info</option>
+                                        <option>is-success</option>
+                                        <option>is-warning</option>
+                                        <option>is-danger</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Disable Message</label>
+                            <label class="checkbox large-checkbox">
+                                <input type="checkbox" v-model="addMessage.disabled">
+                                {{ addMessage.disabled ? 'Message Disabled' : 'Message Enabled' }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons is-right">
+                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushAddedMessage()">Add Message</button>
+                </div>
+
+            </template>
+            <template v-if="editMessage">
+
+                <!-- Message Title Input -->
+                <div class="field">
+                    <label class="label">Message Title</label>
+                    <div class="control">
+                        <input class="input" type="text" v-model="editMessage.title">
+                    </div>
+                </div>
+
+                <!-- Message HTML Input -->
+                <div class="field">
+                    <label class="label">Message HTML</label>
+                    <div class="control">
+                        <textarea class="textarea" type="text" v-model="editMessage.content"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Message Color</label>
+                            <div class="control">
+                                <div class="select w-100">
+                                    <select v-model="editMessage.style" class="w-100">
+                                        <option>is-dark</option>
+                                        <option>is-primary</option>
+                                        <option>is-link</option>
+                                        <option>is-info</option>
+                                        <option>is-success</option>
+                                        <option>is-warning</option>
+                                        <option>is-danger</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Disable Message</label>
+                            <label class="checkbox large-checkbox">
+                                <input type="checkbox" v-model="editMessage.disabled">
+                                {{ editMessage.disabled ? 'Message Disabled' : 'Message Enabled' }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons is-right">
+                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushEditedMessage()">Edit Message</button>
+                </div>
+
+            </template>
         </div>
     </section>
 </template>
@@ -333,7 +429,7 @@ export default {
 
             headerDisabled: !!store.getters.headerDisabled,
 
-            messageObject: { title: null, content: null, style: 'is-dark' },
+            messageArray: store.getters.messages,
             linksArray: store.getters.links,
 
             footerHTML: null,
@@ -341,6 +437,9 @@ export default {
 
             addLink: false,
             editLink: false,
+
+            addMessage: false,
+            editMessage: false,
 
             windowTop: 0,
         }
@@ -365,7 +464,7 @@ export default {
             return store.getters.footer;
         },
         hideMain: function () {
-            return !(this.addLink || this.editLink);
+            return !(this.addLink || this.editLink || this.addMessage || this.editMessage);
         },
     },
     methods: {
@@ -375,6 +474,8 @@ export default {
         backMain: function () {
             this.addLink = false;
             this.editLink = false;
+            this.addMessage = false;
+            this.editMessage = false;
             window.scrollTo(0, this.windowTop);
         },
         saveSettings: function () {
@@ -390,6 +491,7 @@ export default {
 
             this.toast("Settings saved!", { type: "success", duration: 3000 });
         },
+
         addLinkToggle: function (link) {
             if (link) {
                 const newLink = {
@@ -418,13 +520,8 @@ export default {
                 this.editLink = false;
             }
         },
-        deleteLink: function (link) {
-            store.dispatch('deleteLink', link);
-            this.linksArray = this.linksArray.filter(links => links.id !== link.id)
 
-            this.toast("Link deleted!", { type: "success", duration: 3000 });
-        },
-        pushAddedLink: function () {
+        pushAddedLink: async function () {
 
             const linkName = this.addLink.name;
             const linkUrl = this.addLink.url;
@@ -440,19 +537,105 @@ export default {
 
             this.linksArray = store.getters.links;
 
-            store.dispatch('addLink', link);
-            this.addLinkToggle();
+            const result = await store.dispatch('createLink', link);
 
+            if (!result) {
+                this.toast("Something went wrong!", { type: "error", duration: 3000 });
+            }
+
+            this.addLinkToggle();
             this.toast("Link added!", { type: "success", duration: 3000 });
         },
-        pushEditedLink: function () {
+        pushEditedLink: async function () {
 
             const linkName = this.editLink.name;
             const linkUrl = this.editLink.url;
             const linkIcon = this.editLink.icon;
             const linkTarget = this.editLink.target;
 
-            console.log(linkName, linkUrl, linkIcon, linkTarget);
+            store.dispatch('editLink', {
+                name: linkName,
+                url: linkUrl,
+                icon: linkIcon,
+                target: linkTarget,
+            });
+        },
+        deleteLink: async function (id) {
+            const result = await store.dispatch('deleteLink', id);
+
+            if (!result) {
+                this.toast("Error deleting link!", { type: "error", duration: 3000 });
+                return;
+            }
+
+            this.linksArray = this.linksArray.filter(links => links.id !== id)
+            this.toast("Link deleted!", { type: "success", duration: 3000 });
+        },
+
+        addMessageToggle: function (message) {
+            if (message) {
+                const newMessage = {
+                    title: '',
+                    content: '',
+                    style: 'is-dark',
+                    disabled: false,
+                };
+
+                this.addMessage = newMessage;
+            } else {
+                this.addMessage = false;
+            }
+        },
+        editMessageToggle: function (message) {
+            if (message) {
+                const newMessage = {
+                    title: message.title,
+                    content: message.content,
+                    style: message.style,
+                    disabled: message.disabled,
+                };
+
+                this.editMessage = newMessage;
+            } else {
+                this.editMessage = false;
+            }
+        },
+        deleteMessage: function (message) {
+            // store.dispatch('deleteMessage', message);
+            this.messageArray = this.messageArray.filter(messages => messages.id !== message.id)
+
+            this.toast("Message deleted!", { type: "success", duration: 3000 });
+        },
+
+        pushAddedMessage: function () {
+
+            const messageTitle = this.addMessage.title;
+            const messageContent = this.addMessage.content;
+            const messageStyle = this.addMessage.style;
+            const messageDisabled = this.addMessage.disabled;
+
+            const message = {
+                title: messageTitle,
+                content: messageContent,
+                style: messageStyle,
+                disabled: messageDisabled,
+            };
+
+            this.messageArray = store.getters.messages;
+
+            store.dispatch('addMessage', message);
+            this.addMessageToggle();
+
+            this.toast("Message added!", { type: "success", duration: 3000 });
+        },
+        pushEditedMessage: function () {
+
+            const messageTitle = this.editMessage.title;
+            const messageContent = this.editMessage.content;
+            const messageStyle = this.editMessage.style;
+            const messageDisabled = this.editMessage.disabled;
+
+            console.log(messageTitle, messageContent, messageStyle, messageDisabled);
         },
     },
 };

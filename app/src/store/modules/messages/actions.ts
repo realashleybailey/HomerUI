@@ -1,6 +1,6 @@
 import { ActionContext, ActionTree } from 'vuex';
 import { RootState } from '../..';
-import { Messages } from '../../../@types/Message';
+import { Message, Messages } from '../../../@types/Message';
 import { Mutations } from './mutations';
 import { State } from './state';
 // import { ServiceActionTypes } from './action-types';
@@ -34,5 +34,39 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
         // Return the messages
         return messages
+    },
+    async getMessage({ commit, rootState }, id) {
+
+    },
+    async createMessage({ commit, rootState }, message: Message): Promise<Message> {
+        // Create the message on the server
+        const response = await fetch('/api/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + rootState.authentication.token || '',
+            },
+            body: JSON.stringify(message),
+        })
+
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error('Failed to create message')
+        }
+
+        // Get the message from the response
+        const createdMessage = await response.json()
+
+        // Commit the message to the state
+        commit('addMessage', createdMessage)
+
+        // Return the message
+        return createdMessage
+    },
+    async updateMessage(context: AugmentedActionContext, payload: { id: number, message: Message }): Promise<Message> {
+
+    },
+    async deleteMessage(context: AugmentedActionContext, id: number): Promise<void> {
+
     },
 };
