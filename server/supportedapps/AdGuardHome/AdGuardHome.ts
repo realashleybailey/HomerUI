@@ -60,7 +60,6 @@ class AdGuardHome extends SupportedApps {
         return apiUrl;
     }
 
-
 }
 
 export default AdGuardHome;

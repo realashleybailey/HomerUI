@@ -1,7 +1,7 @@
 import db from "../db/connect";
 import { Request, Response } from "express";
 import { getDatabase, getAllDatabase, writeDatabase } from "../helpers/database";
-import { respondError, respondNotFoundError } from "../helpers/errors";
+import { respondAuthError, respondError, respondNotFoundError } from "../helpers/errors";
 import { validate } from "class-validator";
 import { ValidateService } from "../models/ValidateService";
 import { ValidateID } from "../helpers/validateID";
@@ -14,7 +14,8 @@ import { ValidateID } from "../helpers/validateID";
  */
 const getServices = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get all the services from the database where the user id is the user id
     const { err, row: services } = await getAllDatabase(db, 'SELECT * FROM services WHERE user_id = ? ORDER BY position', [userId]);
@@ -40,7 +41,8 @@ const getServices = async (req: Request, res: Response) => {
  */
 const getService = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the service id from the request params
     const { err, id } = await ValidateID(req.params.id);
@@ -73,7 +75,8 @@ const getService = async (req: Request, res: Response) => {
  */
 const postService = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the service from the request body
     const service = req.body;
@@ -119,7 +122,8 @@ const postService = async (req: Request, res: Response) => {
  */
 const putService = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the service id from the request params
     const { err, id } = await ValidateID(req.params.id);
@@ -184,7 +188,8 @@ const putService = async (req: Request, res: Response) => {
  */
 const deleteService = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the service id from the request params
     const { err, id } = await ValidateID(req.params.id);

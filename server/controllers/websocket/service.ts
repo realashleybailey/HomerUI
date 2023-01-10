@@ -11,6 +11,7 @@ const cache = new NodeCache({
     stdTTL: 60,
 });
 
+
 const service = async (socket: Socket, data: any) => {
 
     // Get the id from the data
@@ -50,7 +51,7 @@ const service = async (socket: Socket, data: any) => {
     if (typeof ServiceApp !== 'function') return socket.emit(`service-${id}`, { error: 'Something went wrong', message: 'Service App not Function' });
 
     const appRequest = new ServiceApp({ 
-        url: appService.url,
+        url: appService.endpoint || appService.url,
         username: appService.username,
         password: appService.password,
     });

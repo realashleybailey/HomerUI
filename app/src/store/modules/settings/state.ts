@@ -3,7 +3,7 @@ import { Message } from "../../../@types/Message"
 import { App } from "../../../@types/SupportedApps"
 
 export type State = {
-    configurationNeeded: boolean,
+    configurationNeeded: boolean | null,
     title: string,
     subtitle: string,
     logo: string,
@@ -24,7 +24,7 @@ export type State = {
 }
 
 export const state: State = {
-    configurationNeeded: true,
+    configurationNeeded: null,
     title: "HomerUI",
     subtitle: "Dashboard",
     logo: "/assets/tools/homer.png",

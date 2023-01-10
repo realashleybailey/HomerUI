@@ -104,16 +104,9 @@ export default {
   },
   created: async function () {
     this.loaded = true;
+
     window.that = this;
     window.store = store;
-
-    // Load settings from api
-    store.dispatch("getSettings");
-    store.dispatch("getServices");
-    store.dispatch("getGroups");
-    store.dispatch("getLinks");
-    store.dispatch("getMessages");
-    store.dispatch("getSupportedApps");
   },
   methods: {
     searchHotkey() {

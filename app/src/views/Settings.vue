@@ -1,183 +1,49 @@
 <template>
     <section id="main-section" class="section">
+
         <div class="container p-5 settings" v-if="hideMain">
 
+            <!-- Helpful Tip -->
             <article class="message is-warning">
                 <div class="message-body">
                     <i><b>Tip: </b>You can double click on any input to automatically fill it with it's placeholder value.</i>
                 </div>
             </article>
 
+            <!-- First Row -->
             <div class="columns">
+
                 <div class="column">
-
-                    <!-- Header Title -->
-                    <h2 class="group-title">
-                        Header Settings
-                    </h2>
-
-                    <!-- Title Input -->
-                    <div class="field">
-                        <label class="label">Title</label>
-                        <div class="control">
-                            <input class="input" type="text" v-model="titleText" :placeholder="title" @dblclick="titleText = title">
-                        </div>
-                    </div>
-
-                    <!-- Subtitle Input -->
-                    <div class="field">
-                        <label class="label">Subtitle</label>
-                        <div class="control">
-                            <input class="input" type="text" v-model="subtitleText" :placeholder="subtitle" @dblclick="subtitleText = subtitle">
-                        </div>
-                    </div>
-
-                    <!-- Logo Input -->
-                    <div class="field">
-                        <label class="label">Logo URL</label>
-                        <div class="control">
-                            <input class="input" type="text" v-model="logoURL" :placeholder="logo" @dblclick="logoURL = logo">
-                        </div>
-                    </div>
-
-                    <!-- Header Display Checkbox -->
-                    <div class="field">
-                        <label class="label">Disable Header</label>
-                        <label class="checkbox large-checkbox">
-                            <input type="checkbox" v-model="headerDisabled">
-                            {{ headerDisabled ? 'Header Disabled' : 'Header Enabled' }}
-                        </label>
-                    </div>
+                    <HeaderSettings :title="title" :subtitle="subtitle" :logo="logo" :header="header.enabled" @update:title="header.title = $event" @update:subtitle="header.subtitle = $event" @update:logo="header.logo = $event" @update:enabled="header.enabled = $event" />
                 </div>
 
                 <div class="column">
-
-                    <!-- Footer Title -->
-                    <h2 class="group-title">
-                        Link Settings
-                    </h2>
-
-                    <!-- Footer Input -->
-                    <div class="field">
-                        <label class="label">Add Links</label>
-
-                        <div class="message" v-if="linksArray.length === 0">
-                            <div class="message-body has-text-centered">
-                                No links have been added yet.
-                            </div>
-                        </div>
-
-                        <table class="table is-fullwidth is-striped">
-                            <tbody>
-                                <tr v-for="link in linksArray">
-                                    <td style="vertical-align: middle; width: 1%">{{ link.name }}</td>
-                                    <td style="vertical-align: middle; max-width: 10vw;">
-                                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                            [URL: {{ link.url }}]
-                                        </div>
-                                    </td>
-                                    <td style="display: flex; justify-content: end;">
-                                        <button class="button is-link is-small mr-2" @click="editLinkToggle(link)" :disabled="!link.id">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="button is-danger is-small" @click="deleteLink(link.id)" :disabled="!link.id">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="buttons is-right">
-                            <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="addLinkToggle(true)">
-                                Add Link
-                            </button>
-                        </div>
-                    </div>
-
+                    <LinksSettings :linksArray="linksArray" @addLinkToggle="addLinkToggle" @editLinkToggle="editLinkToggle" @deleteLink="deleteLink" />
                 </div>
 
             </div>
 
+            <!-- Second Row -->
             <div class="columns">
 
                 <div class="column">
-
-                    <!-- Header Title -->
-                    <h2 class="group-title">
-                        Dashboard Messages
-                    </h2>
-
-                    <div class="field">
-
-                        <label class="label">Add Messages</label>
-
-                        <div class="message" v-if="linksArray.length === 0">
-                            <div class="message-body has-text-centered">
-                                No messages have been added yet.
-                            </div>
-                        </div>
-
-                        <table class="table is-fullwidth is-striped">
-                            <tbody>
-                                <tr v-for="message in messageArray">
-                                    <td style="vertical-align: middle; width: 1%">{{ message.title }}</td>
-                                    <td style="vertical-align: middle; max-width: 10vw;">
-                                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                            {{ message.content }}
-                                        </div>
-                                    </td>
-
-                                    <td style="display: flex; justify-content: end;">
-                                        <button class="button is-link is-small mr-2" @click="editMessageToggle(message)">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="button is-danger is-small" @click="deleteMessage(message)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="buttons is-right">
-                            <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="addMessageToggle(true)">
-                                Add Message
-                            </button>
-                        </div>
-                    </div>
+                    <MessagesSettings :messagesArray="messagesArray" @addMessageToggle="addMessageToggle" @editMessageToggle="editMessageToggle" @deleteMessage="deleteMessage" />
                 </div>
+
             </div>
 
 
+            <!-- Third Row -->
             <div class="columns">
 
                 <div class="column">
-                    Second column
+                    TODO: Add more settings
                 </div>
 
                 <div class="column">
-
-                    <!-- Footer Title -->
-                    <h2 class="group-title">
-                        Footer Settings
-                    </h2>
-
-                    <!-- Footer Input -->
-                    <div class="field">
-                        <label class="label">Footer HTML</label>
-                        <div class="control">
-                            <textarea class="textarea" type="text" v-model="footerHTML" :placeholder="footer" @dblclick="footerHTML = footer"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Footer Disabled Checkbox -->
-                    <div class="field">
-                        <label class="label">Disable Footer</label>
-                        <label class="checkbox large-checkbox">
-                            <input type="checkbox" v-model="footerDisabled">
-                            {{ footerDisabled ? 'Footer Disabled' : 'Footer Enabled' }}
-                        </label>
-                    </div>
+                    <FooterSettings :content="footerHTML" :enabled="footer.enabled" @update:content="footer.content = $event" @update:enabled="footer.enabled = $event" />
                 </div>
+
             </div>
 
             <div class="buttons is-right">
@@ -187,205 +53,21 @@
             </div>
 
         </div>
-        <div class="container p-5 settings" v-if="!hideMain">
+
+        <div class="container p-5 settings" v-else>
+
             <div class="buttons is-left">
                 <button class="button is-small is-link" style="background-color: var(--highlight-secondary)" @click="backMain()">Back</button>
             </div>
-            <template v-if="addLink">
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        <input v-model="addLink.name" class="input" type="text" placeholder="Name">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-font"></i>
-                        </span>
-                    </p>
-                </div>
-                <div class="field">
-                    <p class="control has-icons-left">
-                        <input v-model="addLink.url" class="input" type="text" placeholder="URL">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-link"></i>
-                        </span>
-                    </p>
-                </div>
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        <input v-model="addLink.icon" class="input" type="text" placeholder="Font Awesome Icon">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-icons"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                            <i class="fas" :class="[addLink.icon]"></i>
-                        </span>
-                    </p>
-                </div>
-                <div class="field">
-                    <!-- Dropdown to select how the link should be opened -->
-                    <div class="select">
-                        <select v-model="addLink.target">
-                            <option value="_self">Open in same tab
-                            </option>
-                            <option value="_blank">Open in new tab
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="buttons is-right">
-                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushAddedLink()">Add Link</button>
-                </div>
-            </template>
-            <template v-if="editLink">
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        <input v-model="editLink.name" class="input" type="text" placeholder="Name">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-font"></i>
-                        </span>
-                    </p>
-                </div>
-                <div class="field">
-                    <p class="control has-icons-left">
-                        <input v-model="editLink.url" class="input" type="text" placeholder="URL">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-link"></i>
-                        </span>
-                    </p>
-                </div>
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        <input v-model="editLink.icon" class="input" type="text" placeholder="Font Awesome Icon">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-icons"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                            <i class="fas" :class="[editLink.icon]"></i>
-                        </span>
-                    </p>
-                </div>
-                <div class="field">
-                    <!-- Dropdown to select how the link should be opened -->
-                    <div class="select">
-                        <select v-model="editLink.target">
-                            <option value="_self">Open in same tab
-                            </option>
-                            <option value="_blank">Open in new tab
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="buttons is-right">
-                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushEditedLink()">Edit Link</button>
-                </div>
-            </template>
-            <template v-if="addMessage">
 
-                <!-- Message Title Input -->
-                <div class="field">
-                    <label class="label">Message Title</label>
-                    <div class="control">
-                        <input class="input" type="text" v-model="addMessage.title">
-                    </div>
-                </div>
+            <AddLink v-if="addLink" :link="addLink" @addLink="pushAddedLink" />
+            <EditLink v-if="editLink" :link="editLink" @editLink="pushEditedLink" />
 
-                <!-- Message HTML Input -->
-                <div class="field">
-                    <label class="label">Message HTML</label>
-                    <div class="control">
-                        <textarea class="textarea" type="text" v-model="addMessage.content"></textarea>
-                    </div>
-                </div>
+            <AddMessage v-if="addMessage" :message="addMessage" @addMessage="pushAddedMessage" />
+            <EditMessage v-if="editMessage" :message="editMessage" @editMessage="pushEditedMessage" />
 
-
-                <div class="columns">
-                    <div class="column">
-                        <div class="field">
-                            <label class="label">Message Color</label>
-                            <div class="control">
-                                <div class="select w-100">
-                                    <select v-model="addMessage.style" class="w-100">
-                                        <option>is-dark</option>
-                                        <option>is-primary</option>
-                                        <option>is-link</option>
-                                        <option>is-info</option>
-                                        <option>is-success</option>
-                                        <option>is-warning</option>
-                                        <option>is-danger</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="field">
-                            <label class="label">Disable Message</label>
-                            <label class="checkbox large-checkbox">
-                                <input type="checkbox" v-model="addMessage.disabled">
-                                {{ addMessage.disabled ? 'Message Disabled' : 'Message Enabled' }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="buttons is-right">
-                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushAddedMessage()">Add Message</button>
-                </div>
-
-            </template>
-            <template v-if="editMessage">
-
-                <!-- Message Title Input -->
-                <div class="field">
-                    <label class="label">Message Title</label>
-                    <div class="control">
-                        <input class="input" type="text" v-model="editMessage.title">
-                    </div>
-                </div>
-
-                <!-- Message HTML Input -->
-                <div class="field">
-                    <label class="label">Message HTML</label>
-                    <div class="control">
-                        <textarea class="textarea" type="text" v-model="editMessage.content"></textarea>
-                    </div>
-                </div>
-
-
-                <div class="columns">
-                    <div class="column">
-                        <div class="field">
-                            <label class="label">Message Color</label>
-                            <div class="control">
-                                <div class="select w-100">
-                                    <select v-model="editMessage.style" class="w-100">
-                                        <option>is-dark</option>
-                                        <option>is-primary</option>
-                                        <option>is-link</option>
-                                        <option>is-info</option>
-                                        <option>is-success</option>
-                                        <option>is-warning</option>
-                                        <option>is-danger</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="field">
-                            <label class="label">Disable Message</label>
-                            <label class="checkbox large-checkbox">
-                                <input type="checkbox" v-model="editMessage.disabled">
-                                {{ editMessage.disabled ? 'Message Disabled' : 'Message Enabled' }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="buttons is-right">
-                    <button class="button is-link" style="background-color: var(--highlight-secondary)" @click="pushEditedMessage()">Edit Message</button>
-                </div>
-
-            </template>
         </div>
+
     </section>
 </template>
 
@@ -417,35 +99,57 @@
 import { store } from "../store";
 import { useToast } from "vue-toastification";
 
+import HeaderSettings from "../components/settings/HeaderSettings.vue";
+import LinksSettings from "../components/settings/LinksSettings.vue";
+import MessagesSettings from "../components/settings/MessagesSettings.vue";
+import FooterSettings from "../components/settings/FooterSettings.vue";
+
+import AddLink from "../components/settings/AddLink.vue";
+import EditLink from "../components/settings/EditLink.vue";
+
+import AddMessage from "../components/settings/AddMessage.vue";
+import EditMessage from "../components/settings/EditMessage.vue";
+
 export default {
     name: "App",
+    components: {
+        HeaderSettings,
+        LinksSettings,
+        MessagesSettings,
+        FooterSettings,
+
+        AddLink,
+        EditLink,
+
+        AddMessage,
+        EditMessage,
+    },
     data: function () {
         return {
             toast: useToast(),
 
-            titleText: null,
-            subtitleText: null,
-            logoURL: null,
+            header: {
+                title: null,
+                subtitle: null,
+                logo: null,
+                enabled: !!store.getters.headerDisabled,
+            },
 
-            headerDisabled: !!store.getters.headerDisabled,
+            footer: {
+                content: null,
+                enabled: !!store.getters.footerDisabled,
+            },
 
-            messageArray: store.getters.messages,
             linksArray: store.getters.links,
+            messagesArray: store.getters.messages,
 
-            footerHTML: null,
-            footerDisabled: !!store.getters.footerDisabled,
 
             addLink: false,
             editLink: false,
 
             addMessage: false,
             editMessage: false,
-
-            windowTop: 0,
         }
-    },
-    mounted: function () {
-        window.addEventListener("scroll", this.onScroll, true);
     },
     computed: {
         title: function () {
@@ -457,10 +161,7 @@ export default {
         logo: function () {
             return store.getters.logo;
         },
-        message: function () {
-            return store.getters.message;
-        },
-        footer: function () {
+        footerHTML: function () {
             return store.getters.footer;
         },
         hideMain: function () {
@@ -468,15 +169,11 @@ export default {
         },
     },
     methods: {
-        onScroll(e) {
-            this.windowTop = e.target.scrollTop;
-        },
         backMain: function () {
             this.addLink = false;
             this.editLink = false;
             this.addMessage = false;
             this.editMessage = false;
-            window.scrollTo(0, this.windowTop);
         },
         saveSettings: function () {
             store.dispatch('saveSettings', {

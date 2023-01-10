@@ -64,9 +64,19 @@ export const actions: ActionTree<State, RootState> & Actions = {
         return createdMessage
     },
     async updateMessage(context: AugmentedActionContext, payload: { id: number, message: Message }): Promise<Message> {
-
+        return {} as Message;
     },
     async deleteMessage(context: AugmentedActionContext, id: number): Promise<void> {
 
     },
+    resetMessages({ commit }) {
+        commit('setMessages', [
+            {
+                title: "👋 Welcome !",
+                content: "Welcome to HomerUI, the possibilities are endless. Feel free to have a look around!<br /> You can find more information on <a href='https://github.com/realashleybailey/homerui' target='_blank'>github.com/realashleybailey/HomerUI</a>",
+                style: "is-dark",
+                disabled: false,
+            }
+        ])
+    }
 };

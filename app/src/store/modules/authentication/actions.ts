@@ -16,7 +16,7 @@ export interface Actions {
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
-    async login({ commit }, payload) {
+    async login({ commit, dispatch }, payload) {
         // Get the username and password from the payload
         const { username, password } = payload;
 
@@ -42,12 +42,28 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
         // Get the token and user from the response
         const token = data.token;
+
+        // Decode the token to check it is valid
+        const decodedToken = VueJwtDecode.decode(token);
+
+        // If the token is not valid, throw an error
+        if (!decodedToken) {
+            throw new Error('Invalid token');
+        }
+
         const user = data.user;
 
         // Set the token and user in the state
         commit('setToken', token);
         commit('setUser', user);
 
+        // Update other modules
+        await dispatch("getSettings");
+        await dispatch("getServices");
+        await dispatch("getGroups");
+        await dispatch("getLinks");
+        await dispatch("getMessages");
+        
         // Redirect to the home page
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
@@ -55,10 +71,17 @@ export const actions: ActionTree<State, RootState> & Actions = {
         if (redirect) router.push(redirect);
         else router.push('/');
     },
-    async logout({ commit, state }) {
+    async logout({ commit, state, dispatch }) {
         // Set the token and user in the state to null
         commit('setToken', null);
         commit('setUser', null);
+
+        // Update other modules
+        dispatch("resetSettings");
+        dispatch("resetServices");
+        dispatch("resetGroups");
+        dispatch("resetLinks");
+        dispatch("resetMessages");
 
         // Redirect to the login page
         router.push('/login');

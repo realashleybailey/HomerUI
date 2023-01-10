@@ -20,6 +20,7 @@
 
                 <!-- <transition name="fade" mode="in-out"> -->
                 <div v-if="editLayout">
+                    <!-- Horizontal layout -->
                     <div v-if="!vLayout || filter">
                         <template v-for="(group, groupIndex) in dashboard">
                             <div class="columns is-multiline">
@@ -43,7 +44,7 @@
                         </template>
                     </div>
 
-
+                    <!-- Vertical layout -->
                     <div v-if="!filter && vLayout" class="columns is-multiline layout-vertical">
                         <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in dashboard" :key="groupIndex">
                             <h2 v-if="group.name" class="group-title">
@@ -70,33 +71,37 @@
                     <!-- Horizontal layout -->
                     <div v-if="!vLayout || filter" class="columns is-multiline">
                         <template v-for="(group, groupIndex) in dashboard">
-                            <h2 v-if="group.name" class="column is-full group-title" :key="`header-${groupIndex}`">
-                                <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
-                                <div v-else-if="group.logo" class="group-logo media-left">
-                                    <figure class="image is-48x48">
-                                        <img :src="group.logo" :alt="`${group.name} logo`" />
-                                    </figure>
-                                </div>
-                                {{ group.name }}
-                            </h2>
-                            <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :class="['column', `is-${12 / columns}`]" :live="!liveStatsDisabled" />
+                            <template v-if="group.items.length > 0">
+                                <h2 v-if="group.name" class="column is-full group-title" :key="`header-${groupIndex}`">
+                                    <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
+                                    <div v-else-if="group.logo" class="group-logo media-left">
+                                        <figure class="image is-48x48">
+                                            <img :src="group.logo" :alt="`${group.name} logo`" />
+                                        </figure>
+                                    </div>
+                                    {{ group.name }}
+                                </h2>
+                                <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :class="['column', `is-${12 / columns}`]" :live="!liveStatsDisabled" />
+                            </template>
                         </template>
                     </div>
 
                     <!-- Vertical layout -->
                     <div v-if="!filter && vLayout" class="columns is-multiline layout-vertical">
-                        <div :class="['column', `is-${12 / columns}`]" v-for="(group, groupIndex) in dashboard" :key="groupIndex">
-                            <h2 v-if="group.name" class="group-title">
-                                <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
-                                <div v-else-if="group.logo" class="group-logo media-left">
-                                    <figure class="image is-48x48">
-                                        <img :src="group.logo" :alt="`${group.name} logo`" />
-                                    </figure>
-                                </div>
-                                {{ group.name }}
-                            </h2>
-                            <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :class="'service-vertical'" :live="!liveStatsDisabled" />
-                        </div>
+                        <template v-for="(group, groupIndex) in dashboard" :key="groupIndex">
+                            <div :class="['column', `is-${12 / columns}`]" v-if="group.items.length > 0">
+                                <h2 v-if="group.name" class="group-title">
+                                    <i v-if="group.icon" :class="['fa-fw', group.icon]"></i>
+                                    <div v-else-if="group.logo" class="group-logo media-left">
+                                        <figure class="image is-48x48">
+                                            <img :src="group.logo" :alt="`${group.name} logo`" />
+                                        </figure>
+                                    </div>
+                                    {{ group.name }}
+                                </h2>
+                                <Service v-for="(item, index) in group.items" :key="`service-${groupIndex}-${index}`" :item="item" :class="'service-vertical'" :live="!liveStatsDisabled" />
+                            </div>
+                        </template>
                     </div>
                 </div>
                 <!-- </transition> -->
@@ -124,6 +129,8 @@ import DarkMode from "../components/DarkMode.vue";
 import DynamicTheme from "../components/DynamicTheme.vue";
 
 import draggable from "vuedraggable";
+
+import { mapState } from "vuex";
 
 export default {
     name: "App",
@@ -178,13 +185,14 @@ export default {
         isLoggedIn: function () {
             return store.getters.isLoggedIn;
         },
+        ...mapState(['services', 'groups'])
     },
     created: async function () {
         this.loaded = true;
     },
     mounted: function () {
-        console.log("App mounted");
         this.loadDashboard();
+        window.dashboard = this;
     },
     methods: {
         logo: function (logo) {
@@ -193,14 +201,13 @@ export default {
             return '/assets/tools/homer.png';
         },
         loadDashboard: function () {
-            const groups = store.getters.groups;
+            // Clone the groups to break the reference
+            const groups = JSON.parse(JSON.stringify(store.getters.groups));
             const services = store.getters.services;
-
-            console.log("loadDashboard", groups, services);
 
             // If there are no services, return an empty array
             if (!services || !services.length) {
-                return null;
+                return [];
             }
 
             // If there are no groups, return an array with a single group
@@ -208,10 +215,12 @@ export default {
                 return [{ name: "", items: services }];
             }
 
+            // Add the services to the groups
             groups.forEach((group) => {
                 group.items = services.filter((service) => service.group_id === group.id);
             });
 
+            // Return the groups
             this.dashboard = groups;
         },
         matchesFilter: function (item) {
@@ -286,6 +295,19 @@ export default {
             if (!value) this.loadDashboard();
             this.editLayout = value;
             this.toDelete = [];
+        },
+    },
+    watch: {
+        dashboard: function (value) {
+            // store.commit("setDashboard", value);
+        },
+        services: function (value) {
+            console.log("Dashboard reloaded");
+            this.loadDashboard();
+        },
+        groups: function (value) {
+            console.log("Dashboard reloaded");
+            this.loadDashboard();
         },
     },
 };

@@ -8,6 +8,6 @@ export class ValidateTarget implements ValidatorConstraintInterface {
     }
   
     defaultMessage(args: ValidationArguments) {
-      return 'App ID must be a valid app ID'
+      return 'Target must be a valid target'
     }
 }

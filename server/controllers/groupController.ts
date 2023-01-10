@@ -1,7 +1,7 @@
 import db from "../db/connect";
 import { Request, Response } from "express";
 import { getDatabase, getAllDatabase, writeDatabase } from "../helpers/database";
-import { respondError, respondNotFoundError } from "../helpers/errors";
+import { respondAuthError, respondError, respondNotFoundError } from "../helpers/errors";
 import { validate } from "class-validator";
 import { ValidateID } from "../helpers/validateID";
 import { ValidateGroup } from "../models/ValidateGroup";
@@ -14,7 +14,8 @@ import { ValidateGroup } from "../models/ValidateGroup";
  */
 const getGroups = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get all the groups from the database where the user id is the user id
     const { err, row: groups } = await getAllDatabase(db, 'SELECT * FROM groups WHERE user_id = ? ORDER BY position', [userId]);
@@ -37,7 +38,8 @@ const getGroups = async (req: Request, res: Response) => {
  */
 const getGroup = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the group id from the request params
     const { err, id } = await ValidateID(req.params.id);
@@ -66,7 +68,8 @@ const getGroup = async (req: Request, res: Response) => {
  */
 const postGroup = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the group from the request body
     const group = req.body;
@@ -104,7 +107,8 @@ const postGroup = async (req: Request, res: Response) => {
  */
 const putGroup = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the group id from the request params
     const { err, id } = await ValidateID(req.params.id);
@@ -157,7 +161,8 @@ const putGroup = async (req: Request, res: Response) => {
  */
 const deleteGroup = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the group id from the request params
     const { err, id } = await ValidateID(req.params.id);

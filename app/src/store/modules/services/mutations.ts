@@ -1,8 +1,7 @@
 import { MutationTree } from 'vuex';
 import { State } from './state';
 // import { Service } from './mutation-types';
-import type { Services } from '../../../@types/Services';
-import { Service } from '../../../@types/Service';
+import { Service, Services } from '../../../@types/Service';
 
 export type Mutations<S = State> = {
     setServices(state: S, payload: Services): void;

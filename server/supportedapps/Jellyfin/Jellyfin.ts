@@ -7,8 +7,8 @@ class Jellyfin extends SupportedApps {
         let status = "inactive";
         let data = [] as any;
 
-        let res = await this.execute(this.url("Items/Counts"), this.config.headers, this.getAttrs());
-
+        let res = await this.execute(this.url("Items/Counts"), this.config.headers, this.getAttrs(), null);
+        
         if (res == null) return { status, data };
 
         let results = res.data;
@@ -37,6 +37,8 @@ class Jellyfin extends SupportedApps {
     public getAttrs(): object {
         return {
             headers: {
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, compress",
                 "X-MediaBrowser-Token": this.config.password
             }
         }

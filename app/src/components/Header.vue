@@ -2,12 +2,12 @@
     <section v-if="!headerDisabled" class="first-line">
         <div v-cloak class="container">
             <div class="logo">
-                <a href="#">
+                <router-link to="/">
                     <img v-if="logo" :src="`${logo}`" alt="dashboard logo" />
-                </a>
+                </router-link>
                 <i v-if="icon" :class="icon"></i>
             </div>
-            <div class="dashboard-title" :class="{ 'no-logo': !icon || !logo }">
+            <div class="dashboard-title" :class="{ 'no-logo': !icon || !logo }" @click="goHome()">
                 <span class="headline">{{ subtitle }}</span>
                 <h1>{{ title }}</h1>
             </div>
@@ -38,6 +38,11 @@ export default {
         headerDisabled: {
             type: Boolean,
             default: false
+        }
+    },
+    methods: {
+        goHome() {
+            this.$router.push({ name: 'Home' });
         }
     }
 }

@@ -13,9 +13,6 @@ import { compare } from "bcrypt";
  * @returns 
  */
 const getLogin = async (req: Request, res: Response) => {
-
-    // #swagger.tags = ['Authentication']
-
     // Get the username and password from the request body
     const { username, password } = req.body;
 

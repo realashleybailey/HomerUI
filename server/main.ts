@@ -16,6 +16,7 @@ import morganMiddleware from "./middleware/morgan";
 
 import swaggerUI from "swagger-ui-express";
 import swaggerDOC from "./swagger.json";
+import { writeFile } from "fs";
 
 // Debugging purposes
 
@@ -29,6 +30,8 @@ const updateConsole = (data: any) => {
 }
 
 
+// Reset axios.txt log file
+writeFile(join(__dirname, '/logs/', 'axios.log'), '', err => { });
 
 ///////////////////////////////////////////////////////////////////
 ////////////////////// PRODUCTION SERVER //////////////////////////

@@ -41,7 +41,7 @@
     position: absolute;
     left: 0px;
     right: 0px;
-    top: 0px;
+    top: 152px;
     bottom: 0px;
 
     /* Center the content */

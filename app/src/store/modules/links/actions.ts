@@ -108,7 +108,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
         // Return the link
         return updatedLink;
     },
-    async deleteLink({ commit, state, rootState }, id) {
+    async deleteLink({ commit, rootState }, id) {
         // Delete link from the server
         const response = await fetch(`/api/link/${id}`, {
             method: 'DELETE',
@@ -128,5 +128,16 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
         // Return the link
         return id;
+    },
+    resetLinks({ commit }) {
+        commit('setLinks', [
+            {
+                id: 1,
+                name: "Home",
+                url: "/",
+                icon: "fas fa-house",
+                target: "_self",
+            }
+        ]);
     }
 };

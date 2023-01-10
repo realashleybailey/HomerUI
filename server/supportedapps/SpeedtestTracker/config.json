@@ -1,0 +1,11 @@
+{
+    "fields": [
+        {
+            "name": "endpoint",
+            "type": "text",
+            "required": false,
+            "placeholder": "Leave blank to use Service URL",
+            "header": "Endpoint"
+        }
+    ]
+}

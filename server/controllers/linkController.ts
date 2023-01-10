@@ -1,14 +1,15 @@
 import db from "../db/connect";
 import { Request, Response } from "express";
 import { getDatabase, getAllDatabase, writeDatabase } from "../helpers/database";
-import { respondError, respondNotFoundError } from "../helpers/errors";
+import { respondAuthError, respondError, respondNotFoundError } from "../helpers/errors";
 import { validate } from "class-validator";
 import { ValidateID } from "../helpers/validateID";
 import { ValidateLink } from "../models/ValidateLink";
 
 const getLinks = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get all the links from the database where the user id is the user id
     const { err, row: links } = await getAllDatabase(db, 'SELECT * FROM links WHERE user_id = ?', [userId]);
@@ -25,7 +26,8 @@ const getLinks = async (req: Request, res: Response) => {
 
 const getLink = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the link id from the request params
     const { err, id } = await ValidateID(req.params.id);
@@ -48,7 +50,8 @@ const getLink = async (req: Request, res: Response) => {
 
 const postLink = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the link from the request body
     const link = req.body;
@@ -81,7 +84,8 @@ const postLink = async (req: Request, res: Response) => {
 
 const putLink = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the link id from the request params
     const { err, id } = await ValidateID(req.params.id);
@@ -129,7 +133,8 @@ const putLink = async (req: Request, res: Response) => {
 
 const deleteLink = async (req: Request, res: Response) => {
     // Get the user id from the request user
-    const userId = (req as any).user ? (req as any).user.id : 1;
+    const userId = (req as any).user.id;
+    if (!userId) return respondAuthError(res);
 
     // Get the link id from the request params
     const { err, id } = await ValidateID(req.params.id);

@@ -46,6 +46,7 @@
   
 <script>
 import service from "@/mixins/service.js";
+import { store } from "../../store";
 
 export default {
     name: "Custom",
@@ -66,7 +67,7 @@ export default {
         };
     },
     mounted() {
-        if (this.live) this.queueJob();
+        if (this.live && store.getters.isLoggedIn) this.queueJob();
     },
     watch: {
         live: function (val) {
@@ -80,13 +81,19 @@ export default {
     },
     methods: {
         queueJob() {
+
+            // Check if enhanced is enabled
             if (!this.item.enhanced) return;
+
+            // Send first websocket request
             this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
 
+            // Set interval to send websocket request every 5 seconds
             this.interval = setInterval(() => {
                 this.$socket.emit(`service-${this.item.id}`, { id: this.item.id })
             }, 5000);
 
+            // Listen for websocket response and update livestats
             this.sockets.subscribe(`service-${this.item.id}`, (data) => {
                 if (data.html) this.livestats = data.html;
             });

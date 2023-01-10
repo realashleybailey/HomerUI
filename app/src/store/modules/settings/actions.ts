@@ -60,4 +60,31 @@ export const actions: ActionTree<State, RootState> & Actions = {
         // Return the supported apps
         return supportedApps;
     },
+    async getStatus({ commit, state }) {
+        if (state.configurationNeeded === null || state.configurationNeeded === true) {
+            const response = await fetch("/api/status");
+            const status = await response.json();
+
+            console.log(status);
+
+            commit('setConfigurationNeeded', !status.database);
+        }
+    },
+    resetSettings({ commit }) {
+        commit('setTitle', "HomerUI");
+        commit('setSubtitle', "Dashboard");
+        commit('setLogo', "/assets/tools/homer.png");
+        commit('setIcon', "");
+        commit('setHeaderDisabled', false);
+        commit('setFooter', "Made with ❤️ by <a href='https://github.com/realashleybailey' target='_blank'>Ashley Bailey</a>");
+        commit('setFooterDisabled', false);
+        commit('setDefaults', {
+            layout: "columns",
+            colorTheme: "auto",
+        });
+        commit('setVLayout', true);
+        commit('setIsDark', true);
+        commit('setColorTheme', 0);
+        commit('setLiveStatsDisabled', true);
+    },
 };

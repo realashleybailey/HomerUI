@@ -11,7 +11,6 @@ const WEBSOCKET = (io: Server) => {
     socket.onAny((event, ...args) => {
        
         // If the event is service, run the service function
-
         service(socket, args[0]);
 
     });

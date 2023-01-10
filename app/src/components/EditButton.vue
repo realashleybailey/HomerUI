@@ -55,7 +55,8 @@ export default {
             const result = await fetch('/api/position', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + store.getters.token
                 },
                 body: JSON.stringify(positions)
             })

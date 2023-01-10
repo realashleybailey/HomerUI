@@ -54,7 +54,7 @@ router.get("/auth/logout", jwtVerify, getLogout
 // Service Routes //
 ////////////////////
 
-router.get("/service", getServices
+router.get("/service", jwtVerify, getServices
 // #swagger.tags = ['Service']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of services', schema: { $ref: "#/definitions/ServicesResponse" } }
@@ -109,7 +109,7 @@ router.delete("/service/:id", jwtVerify, deleteService
 // Group Routes  //
 ///////////////////
 
-router.get("/group", getGroups
+router.get("/group", jwtVerify, getGroups
 // #swagger.tags = ['Group']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of groups', schema: { $ref: "#/definitions/GroupsResponse" } }
@@ -164,7 +164,7 @@ router.delete("/group/:id", jwtVerify, deleteGroup
 // Link Routes //
 /////////////////
 
-router.get("/link", getLinks
+router.get("/link", jwtVerify, getLinks
 // #swagger.tags = ['Link']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of links', schema: { $ref: "#/definitions/LinksResponse" } }
@@ -272,7 +272,7 @@ router.delete("/message/:id", jwtVerify, deleteMessage
 // Position Routes //
 /////////////////////
 
-router.get("/position", getPositions
+router.get("/position", jwtVerify, getPositions
 // #swagger.tags = ['Position']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.responses[200] = { description: 'List of positions', schema: { $ref: "#/definitions/PositionsResponse" } }
@@ -281,7 +281,7 @@ router.get("/position", getPositions
 // #swagger.responses[400] = { description: 'Bad request' }
 );
 
-router.post("/position", postPositions
+router.post("/position", jwtVerify, postPositions
 // #swagger.tags = ['Position']
 // #swagger.security = [{ "bearerAuth": [] }]
 // #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/definitions/Position" }}}}

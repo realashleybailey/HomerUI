@@ -1,7 +1,6 @@
 import { ActionContext, ActionTree } from 'vuex';
 import { RootState } from '../..';
-import { Service } from '../../../@types/Service';
-import { Services } from '../../../@types/Services';
+import { Service, Services } from '../../../@types/Service';
 import { Mutations } from './mutations';
 import { State } from './state';
 // import { ServiceActionTypes } from './action-types';
@@ -127,5 +126,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
         // Return nothing
         return
+    },
+    resetServices({ commit }) {
+        commit('setServices', [])
     }
 };

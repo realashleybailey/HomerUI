@@ -1,4 +1,4 @@
-import type { Services } from '../../../@types/Services';
+import type { Services } from '../../../@types/Service';
 
 export type State = {
     services: Services;

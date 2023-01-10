@@ -5,6 +5,8 @@
         <i v-if="message.icon" :class="`fa-fw ${message.icon}`"></i>
         {{ message.title }}
       </p>
+
+      <button class="delete" aria-label="delete"></button>
     </div>
     <div v-if="message.content" class="message-body" v-html="message.content"></div>
   </article>

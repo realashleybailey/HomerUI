@@ -1,0 +1,18 @@
+{
+    "fields": [
+        {
+            "name": "password",
+            "type": "text",
+            "required": true,
+            "placeholder": "API Key",
+            "header": "API Key"
+        },
+        {
+            "name": "endpoint",
+            "type": "text",
+            "required": false,
+            "placeholder": "Leave blank to use Service URL",
+            "header": "Endpoint"
+        }
+    ]
+}

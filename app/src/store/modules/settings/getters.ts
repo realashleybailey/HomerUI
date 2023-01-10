@@ -6,7 +6,7 @@ import { App } from '../../../@types/SupportedApps';
 import { State } from './state';
 
 export type Getters = {
-    configurationNeeded(state: State): boolean;
+    configurationNeeded(state: State): boolean | null;
     title(state: State): string;
     subtitle(state: State): string;
     logo(state: State): string;

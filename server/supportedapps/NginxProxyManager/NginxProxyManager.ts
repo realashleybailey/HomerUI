@@ -54,7 +54,7 @@ class NginxProxyManager extends SupportedApps {
     }
 
     public url(endpoint: string): string {
-        let apiUrl = super.normaliseurl(this.config.url) + endpoint;
+        let apiUrl = super.normaliseurl(this.config.url, false) + endpoint;
         return apiUrl;
     }
 }

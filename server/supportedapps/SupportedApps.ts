@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method, RawAxiosRequestHeaders } from "axios";
+import { appendFile, writeFile } from "fs";
 
 import { readFile } from "fs/promises";
 import { join } from "path";
-
+import { Agent } from "https";
 class SupportedApps {
 
     protected method: Method = "GET";
@@ -61,7 +62,7 @@ class SupportedApps {
         }
     }
 
-    async execute(url: string, attrs: RawAxiosRequestHeaders, overridevars: AxiosRequestConfig | null = null, overridemethod: Method | null = null): Promise<AxiosResponse | null> {
+    async execute(url: string, attrs: RawAxiosRequestHeaders, overridevars: AxiosRequestConfig | null = null, overridemethod: Method | null = null, disableTLS: Boolean = false): Promise<AxiosResponse | null> {
 
         let res = null;
 
@@ -78,9 +79,16 @@ class SupportedApps {
             ...vars
         }
 
+        if (disableTLS) {
+            config.httpsAgent = new Agent({
+                rejectUnauthorized: false
+            });
+        }
+
         try {
             return await axios(config)
-        } catch (error) {
+        } catch (error: any) {
+            // writeFile(join(__dirname, 'error.json'), JSON.stringify(error), (err) => { });
             this.error = error;
         }
 

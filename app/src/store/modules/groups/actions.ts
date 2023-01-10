@@ -34,5 +34,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
         // Return the groups
         return groups
+    },
+    resetGroups({ commit }) {
+        commit('setGroups', [])
     }
 };
