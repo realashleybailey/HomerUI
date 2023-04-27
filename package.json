@@ -1,0 +1,14 @@
+{
+  "name": "homerui",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "docker:build": "docker build -t homerui ./docker/Dockerfile",
+    "docker:publish": "./docker/publish-latest.sh"
+  },
+  "author": "",
+  "license": "ISC"
+}

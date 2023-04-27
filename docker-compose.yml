@@ -1,17 +1,7 @@
----
-version: "2"
+version: '3'
 services:
-  homer:
-    # image: b4bz/homer
-    #To build from source, comment previous line and uncomment below
-    build: .
-    restart: always
-    container_name: homerUI
-    # volumes:
-    #   - ./dist/:/www/assets
+  homerui:
+    image: 'realashleybailey/homerui:latest'
     ports:
-      - 8181:8181
-      - 8282:5252
-    # user: 1000:1000 # default
-    # environment:
-    #   - INIT_ASSETS=1 # default
+      - '8181:8181'
+    restart: always
